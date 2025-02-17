@@ -21,15 +21,14 @@ public class CourierManager {
 
 	// Назначение курьера на заказ.
 	// ВНИМАНИЕ! У КОГО ЛИСТЫ С ЗАКАЗАМИ???
-	public static void assignCourierToOrder(String id, Order order) {
+	public static void assignCourierToOrder(String id, ArrayList<Order> orders) {
 		if (courierOrders.isEmpty()) {
 			courierList.forEach(c -> {
 				courierOrders.put(c.getId(), new ArrayList<Order>());
 
 			});
 		}
-		ArrayList<Order> newOne = new ArrayList<Order>();
-		newOne.add(order);
+		ArrayList<Order> newOne = new ArrayList(orders);
 		courierOrders.put(id, newOne);
 	}
 
