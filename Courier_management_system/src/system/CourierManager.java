@@ -41,6 +41,10 @@ public class CourierManager {
 		});
 		return courier;
 	}
+	
+	public static ArrayList getCourierListOfOrdersById(String ID) {
+		return courierOrders.get(ID);
+	}
 
 	// Назначение курьера на заказ.
 	public static void assignCourierToOrder(String id, ArrayList<Order> orders) {
