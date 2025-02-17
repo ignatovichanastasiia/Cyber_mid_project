@@ -19,7 +19,7 @@ public class Courier implements Serializable {
 	private static final String DIRECTORY_PATH = "serializ";
 	private static Scanner sc = new Scanner(System.in);
 	private String id;
-	private String category;
+	private String category; ////	REFRIGERATED, OVERSIZE, LIGHT
 	private long workingHours;
 	private int penalty;
 	private int blockStatus;
@@ -188,6 +188,15 @@ public class Courier implements Serializable {
 
 	public boolean isBlockStatus() {
 		return blockStatus > 0;
+	}
+
+	
+	public boolean isOnlineStatus() {
+		return onlineStatus;
+	}
+
+	public void setOnlineStatus(boolean onlineStatus) {
+		this.onlineStatus = onlineStatus;
 	}
 
 	@Override

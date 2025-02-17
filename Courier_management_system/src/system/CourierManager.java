@@ -12,11 +12,15 @@ public class CourierManager {
 	private static Map<String, ArrayList<Order>> courierOrders = new HashMap();
 	private static boolean normal;
 
-	// Добавление нового курьера - метод символически поддерживает логику.
-	public static void addCourier(Courier courier) {
-		if (!courierList.contains(courier)) {
-			courierList.add(courier);
-		}
+	// Добавление нового курьера
+	public static Courier addCourier(String category) {
+		System.out.println("Creating new Courier.");
+		Courier courier = new Courier(category);
+		return courier;
+	}
+	
+	public static void printCourierId(Courier courier) {
+		System.out.println(courier.getId());
 	}
 
 	// Назначение курьера на заказ.
