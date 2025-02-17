@@ -15,11 +15,9 @@ public class Main {
 	private static void startRegistration() {
 //		while (true) {
 		menuRegistration(10);
-		int role = sc.nextInt();
-		sc.nextLine();
+		int role = takeNum();
 		menuRegistration(role);
-		int num = sc.nextInt();
-		sc.nextLine();
+		int num = takeNum();
 		switch (role) {
 		case 1:
 			menuCourier(num);
@@ -31,7 +29,6 @@ public class Main {
 			menuAdmin(num);
 			break;
 		}
-		menuWithRoles(num);
 
 //		}
 	}
@@ -44,7 +41,8 @@ public class Main {
 //– запуск третьего периода (подведение итогов и создание отчетов).
 	}
 
-
+	// Switch 1round(default 10) - role enter
+	// Switch 2round(with role) - choose in menu
 	private static void menuRegistration(int num) {
 		switch (num) {
 		case 10:
@@ -59,7 +57,7 @@ public class Main {
 			System.out.println("""
 					This is menu for couriers!\n
 					\tNew courier - enter 1.
-					\tTake orders - enter 2.
+					\tTake orders for this day (get online status) - enter 2.
 					""");
 			break;
 		case 2:
@@ -104,10 +102,20 @@ public class Main {
 					\tOversize - enter 2.
 					\tLight - enter 3.
 					""");
-
+			Courier courier = CourierManager.addCourier(takeCategory(takeNum()));
+			System.out.println("ID of new courier: " + courier.getId() + "\nTake orders for this day?Y/N");
+			String agree = sc.nextLine();
+			if(agree.trim().equalsIgnoreCase("Y")) {
+				CourierManager.changeStatusToOnline(courier.getId());
+			}
 			break;
 		case 2:
-			//TODO 
+			System.out.println("""
+					Let's try to change your status to online and take some orders for this day.
+					Ender your ID: 
+					""");
+			String clientId = sc.nextLine();
+			CourierManager.changeStatusToOnline(clientId);
 			break;
 
 		default:
@@ -126,37 +134,57 @@ public class Main {
 			break;
 		default:
 			System.out.println("""
-					Wrong number. Enter only numbers from the menues. Try again!
+					Wrong number. Enter only numbers from the menus. Try again!
 					""");
 			break;
 		}
 
 	}
 
-	private static menuAdmin(int num) {
+	private static void menuAdmin(int num) {
 		switch (num) {
 		case 1:
 			break;
 		case 2:
 			break;
 		default:
-		System.out.println("""
-				Wrong number. Enter only numbers from the menues. Try again!
-				""");
-		break;
-	}
+			System.out.println("""
+					Wrong number. Enter only numbers from the menues. Try again!
+					""");
+			break;
+		}
 	}
 
-	private static int takeNum(){
-		try {
-			
-		int num = sc.nextInt();
-		sc.nextLine();
-		} catch (NumberFormatException e) {
-            System.out.println("Wrong enter");
-        }catch(Exception e) {
-        	System.out.println("Wrong number");
+	private static String takeCategory(int intCategory) {
+		String strCategory = "null";
+		switch (intCategory) {
+		case 1:
+			strCategory = "refrigerated";
+			break;
+		case 2:
+			strCategory = "oversize";
+			break;
+		case 3:
+			strCategory = "light";
+			break;
+		default:
+			System.out.println("Wrong number. Enter 1 or 2 or 3: ");
+			strCategory = takeCategory(intCategory);
+			break;
 		}
+		return strCategory;
+	}
+
+	private static int takeNum() {
+		int num = 0;
+		try {
+			num = sc.nextInt();
+			sc.nextLine();
+		} catch (NumberFormatException e) {
+			System.out.println("Wrong enter");
+			num = 0;
+		}
+		return num;
 	}
 }
 

@@ -17,6 +17,7 @@ public class Courier implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final String ID_TEXT = "courier";
 	private static final String DIRECTORY_PATH = "serializ";
+	private static final String NULL = null;
 	private static Scanner sc = new Scanner(System.in);
 	private String id;
 	private String category; ////	REFRIGERATED, OVERSIZE, LIGHT
@@ -24,6 +25,7 @@ public class Courier implements Serializable {
 	private int penalty;
 	private int blockStatus;
 	private boolean onlineStatus;
+	private ArrayList<Order> orders;
 	
 	/*
 	 * Конструктор берет атрибутом категорию перевозки. Все остальные атрибуты генерируются в процессе 
@@ -47,6 +49,7 @@ public class Courier implements Serializable {
 		this.penalty = 0;
 		this.blockStatus = 0;
 		this.onlineStatus = false;
+		this.orders = new ArrayList<Order>();
 		
 		ArrayList<Courier> couriers = new ArrayList<Courier>(CourierManager.getCourierList());
 		couriers.add(this);
@@ -60,6 +63,7 @@ public class Courier implements Serializable {
 	 * Confirmation of order acceptance. The method
 	 * takes a list of distributed orders and returns a list of accepted orders.
 	 */
+	//
 	public ArrayList<Order> confirmOrder(ArrayList<Order> orders) {
 		ArrayList<Order> confirmList = new ArrayList<Order>();
 		orders.forEach(o -> {
@@ -69,9 +73,11 @@ public class Courier implements Serializable {
 				confirmList.add(o);
 			}else {
 				o.setStatusAccepted(false);
+//				o.setCourierIDcomplete(NULL);
 			}
 		});
-		return confirmList;
+		orders = confirmList;
+		return orders;
 
 	}
 
@@ -82,12 +88,13 @@ public class Courier implements Serializable {
 	 * account fines and bonuses.
 	 * 
 	 */
-	public double calculateSalary(double salary, double penaltyCost) {
+	public double calculateSalary(double salary, double penaltyCost,double bonusCost) {
 		Duration duration = Duration.ofHours(workingHours);
 		double hours = duration.toHours();
 		double totalPenalty = penalty * penaltyCost;
 		penalty = 0;
-		return hours * salary - totalPenalty;
+		double totalBonus = orders.size()/5*bonusCost;
+		return hours * salary - totalPenalty + totalBonus;
 	}
 
 	/*
@@ -190,7 +197,6 @@ public class Courier implements Serializable {
 		return blockStatus > 0;
 	}
 
-	
 	public boolean isOnlineStatus() {
 		return onlineStatus;
 	}
@@ -199,11 +205,16 @@ public class Courier implements Serializable {
 		this.onlineStatus = onlineStatus;
 	}
 
+	public ArrayList<Order> getOrders() {
+		return orders;
+	}
+
 	@Override
 	public String toString() {
 		return "Courier [id=" + id + ", category=" + category + ", workingHours=" + workingHours + ", penalty="
-				+ penalty + ", blockStatus=" + blockStatus + "]";
+				+ penalty + ", blockStatus=" + blockStatus + ", onlineStatus=" + onlineStatus+ "]";
 	}
+	
 	
 
 }

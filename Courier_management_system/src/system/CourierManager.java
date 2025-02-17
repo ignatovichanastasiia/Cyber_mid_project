@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class CourierManager {
 	private static final int MAX_WORK_HOURS = 11;
@@ -18,9 +19,27 @@ public class CourierManager {
 		Courier courier = new Courier(category);
 		return courier;
 	}
-	
-	public static void printCourierId(Courier courier) {
-		System.out.println(courier.getId());
+
+	// изменение статуса - выход на линию. Разрешение на распределение заказов !!!
+	// CHANGED
+	public static void changeStatusToOnline(String id) {
+			Optional<Courier> courier = getCourierFromID(id);
+			if(courier.isPresent()) {
+				courier.get().setOnlineStatus(true);
+				System.out.println("Courier id: "+courier.get().getId()+" online to day.");
+			}
+	}
+
+	public static Optional<Courier> getCourierFromID(String id) {
+		Optional<Courier> courier = Optional.empty();
+		courierList.forEach(c -> {
+			if (c.getId().equalsIgnoreCase(id)) {
+				courier.of(c);
+			}else {
+			System.out.println("Courier with id: " + id + " not found");
+			}
+		});
+		return courier;
 	}
 
 	// Назначение курьера на заказ.
@@ -36,17 +55,17 @@ public class CourierManager {
 	}
 
 	//  checkWorkTime() – проверка времени работы курьера.
-	//ДЛЯ ИТОГОВЫХ ПОДСЧЕТОВ
+	// ДЛЯ ИТОГОВЫХ ПОДСЧЕТОВ
 	public static boolean checkWorkTime(String id) {
 		normal = true;
 		courierList.forEach(c -> {
-			if(c.getId().equals(id)){
+			if (c.getId().equals(id)) {
 				Duration duration = c.getWorkingHours();
-				if(duration.toHours()>NORMAL_WORK_HOURS) {
+				if (duration.toHours() > NORMAL_WORK_HOURS) {
 					c.addPenalty();
 					normal = false;
 				}
-				if(duration.toHours()>MAX_WORK_HOURS) {
+				if (duration.toHours() > MAX_WORK_HOURS) {
 					c.blockCourier();
 				}
 			}
@@ -83,8 +102,6 @@ public class CourierManager {
 	public static void setCourierOrders(Map<String, ArrayList<Order>> courierOrders) {
 		CourierManager.courierOrders = courierOrders;
 	}
-	
-	
 
 }
 //order.isAssepted() - false;
