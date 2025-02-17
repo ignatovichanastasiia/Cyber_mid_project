@@ -11,37 +11,35 @@ public class OrderManager {
 	private static final Duration LIMIT_WORKING_HOURS = Duration.ofHours(8);
 
 	// displayAssingedOrders(Courier ID) – отображение назначенных конкретному
-	// курьеру заказов.
 
-	/**
-	 * This method distributes orders among couriers. It iterates through the list
-	 * of couriers and assigns orders to those who still have available working
-	 * hours. If a courier's working hours are exhausted, it prints a message. It
-	 * calls the selectOrdersWithinLimit method to select orders within the
-	 * courier's working hours limit.
-	 */
+    /**
+     * Distributes orders among couriers. It iterates through the list of couriers and 
+     * assigns orders to those who still have available working hours. If a courier's 
+     * working hours are exhausted, it prints a message. Calls selectOrdersWithinLimit 
+     * method to select orders within the courier's working hours limit.
+     */
 	private static void distributeOrders() {
 		for (Courier courier : CourierManager.getCourierList()) {
-			if (courier.isBlockStatus()) {
-				System.out.println("The courier " + courier.getId() + " expired all working hours");
+			if (!courier.isOnlineStatus()) {
+				System.out.println("The courier " + courier.getId() + " is offline");
 			} else {
-				// Выбор заказов в пределах оставшихся рабочих часов курьера
-				ArrayList<Order> selectedOrders = selectOrdersWithinLimit(LIMIT_WORKING_HOURS);
-				CourierManager.assignCourierToOrder(courier.getId(), selectedOrders);
+				selectOrdersWithinLimit(LIMIT_WORKING_HOURS);
+				CourierManager.assignCourierToOrder(courier.getId(), listOrdersToDo);
 				System.out.println("Orders have been assigned to courier " + courier.getId());
-			}
+			}	
+		} for (Order listOrdersToDo: Order.getOrders()) {
+			listOrdersToDo.setStatusAccepted(true);
 		}
 	}
 
 	/**
-	 * This method selects orders within the given time limit. It first clears the
-	 * listOrdersToDo, then adds priority orders and remaining orders to the list.
-	 * It calls the addOrdersToListToDo method to add orders while ensuring the
-	 * total time does not exceed the limit.
-	 * 
-	 * @param limit - courier's working hours left
-	 * @return ArrayList <Order> listOrdersToDo
-	 */
+     * Selects orders within the given time limit. First clears listOrdersToDo, then adds 
+     * priority orders and remaining orders to the list. Calls addOrdersToListToDo method 
+     * to add orders while ensuring the total time does not exceed the limit.
+     *
+     * @param limit - the remaining working hours of the courier
+     * @return ArrayList<Order> - list of selected orders
+     */
 	public static ArrayList<Order> selectOrdersWithinLimit(Duration limit) {
 		listOrdersToDo.clear(); // Очищаем список для новых отобранных заказов
 		Duration totalTime = Duration.ZERO;
@@ -52,17 +50,16 @@ public class OrderManager {
 		return listOrdersToDo;
 	}
 
-	/**
-	 * This helper method sorts the given list of orders based on the sum of loading
-	 * time and expected time. It then adds orders to the listOrdersToDo if the
-	 * total time including the order's time does not exceed the limit. It returns
-	 * the updated total time.
-	 * 
-	 * @param orders
-	 * @param totalTime
-	 * @param limit
-	 * @return totalTime
-	 */
+	 /**
+     * Helper method that sorts the given list of orders based on the sum of loading time 
+     * and expected time. Adds orders to listOrdersToDo if the total time including the 
+     * order's time does not exceed the limit. Returns the updated total time.
+     *
+     * @param orders - list of orders to sort and add
+     * @param totalTime - current total time of completing orders
+     * @param limit - limit of time for completing orders
+     * @return totalTime - updated total time of completing orders
+     */
 	private static Duration addOrdersToListToDo(ArrayList<Order> orders, Duration totalTime, Duration limit) {
 		ArrayList<Order> sortedOrders = new ArrayList<>(orders);
 		sortedOrders.sort(Comparator.comparing(order -> order.getLoadingTime().plus(order.getExpectedTime())));
@@ -79,13 +76,12 @@ public class OrderManager {
 	}
 
 	/**
-	 * This method adds priority orders to the priorityOrders list. It iterates
-	 * through the list of orders and adds those marked as priority. If no priority
-	 * orders are found, it prints a message and returns null. Otherwise, it returns
-	 * the priorityOrders list.
-	 * 
-	 * @return priorityOrders or null;
-	 */
+     * Adds priority orders to the priorityOrders list. Iterates through the list of 
+     * orders and adds those marked as priority. If no priority orders are found, prints 
+     * a message and returns null. Otherwise, returns the priorityOrders list.
+     *
+     * @return priorityOrders or null - list of priority orders or null if no such orders exist
+     */
 	public static ArrayList<Order> addOrdersToPriorityList() {
 		for (Order order : Order.getOrders()) {
 			if (order.isPriority()) {
