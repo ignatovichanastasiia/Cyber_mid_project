@@ -32,9 +32,11 @@ public class OrderManager {
 	        } else {
 	            // Выбор заказов в пределах оставшихся рабочих часов курьера
 	            ArrayList<Order> selectedOrders = selectOrdersWithinLimit(courier.getWorkingHours());
+	            CourierManager.assignCourierToOrder(courier.getId(),selectedOrders);
 
 	            // Добавление заказов курьеру
 	           // courier.addOrders(selectedOrders);
+	            //обращение к листу. 
 
 	            // Сообщение о том, что заказы были назначены курьеру
 	            System.out.println("Orders have been assigned to courier " + courier.getId());
