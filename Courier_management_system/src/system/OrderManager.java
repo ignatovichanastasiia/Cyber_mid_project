@@ -27,11 +27,11 @@ public class OrderManager {
 	private static void distributeOrders() {
 	    for (Courier courier : CourierManager.getCourierList()) {
 	        // Проверяет, истекли ли рабочие часы курьера
-	        if (courier.getWorkingHours().compareTo(Duration.ZERO) <= 0) {
+	        if (courier.isBlockStatus()) { 
 	            System.out.println("The courier " + courier.getId() + " expired all working hours");
 	        } else {
 	            // Выбор заказов в пределах оставшихся рабочих часов курьера
-	            ArrayList<Order> selectedOrders = selectOrdersWithinLimit(courier.getWorkingHours());
+	            ArrayList<Order> selectedOrders = selectOrdersWithinLimit(limitWorkingHours);
 	            CourierManager.assignCourierToOrder(courier.getId(),selectedOrders);
 
 	            // Добавление заказов курьеру
