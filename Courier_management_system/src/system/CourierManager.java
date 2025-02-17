@@ -20,7 +20,6 @@ public class CourierManager {
 	}
 
 	// Назначение курьера на заказ.
-	// ВНИМАНИЕ! У КОГО ЛИСТЫ С ЗАКАЗАМИ???
 	public static void assignCourierToOrder(String id, ArrayList<Order> orders) {
 		if (courierOrders.isEmpty()) {
 			courierList.forEach(c -> {
@@ -33,6 +32,7 @@ public class CourierManager {
 	}
 
 	//  checkWorkTime() – проверка времени работы курьера.
+	//ДЛЯ ИТОГОВЫХ ПОДСЧЕТОВ
 	public static boolean checkWorkTime(String id) {
 		normal = true;
 		courierList.forEach(c -> {
@@ -83,6 +83,7 @@ public class CourierManager {
 	
 
 }
+//order.isAssepted() - false;
 
 //o	Атрибуты: 
 //	courierList (список курьеров)

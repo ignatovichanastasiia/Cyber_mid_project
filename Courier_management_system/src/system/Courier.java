@@ -65,6 +65,8 @@ public class Courier implements Serializable {
 			String answer = sc.nextLine();
 			if (answer.equalsIgnoreCase("Y")) {
 				confirmList.add(o);
+			}else {
+				o.setStatusAccepted(false);t
 			}
 		});
 		return confirmList;

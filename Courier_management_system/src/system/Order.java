@@ -1,5 +1,5 @@
 package system;
-//by Ivan
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -21,8 +21,9 @@ public class Order {
     private Duration travelTime;
     private Duration delayTime; // Will be initialized by randomizeDelay method
     private boolean priority;
-    private boolean status;
-    static ArrayList<Order> orders = new ArrayList<Order>();
+    private boolean statusComplete;
+    private boolean statusAccepted;
+    private static ArrayList<Order> orders = new ArrayList<Order>();
 
     /**
      * Constructor to initialize an Order object with given parameters.
@@ -40,7 +41,8 @@ public class Order {
         this.travelTime = travelTime;
         this.delayTime = randomizeDelay(); // Initialize with a random delay
         this.priority = priority;
-        this.status = status;
+        this.statusComplete = false;
+        this.statusComplete = false;
         this.id = getClass().getSimpleName().charAt(0) + "-" + "0".repeat(nullsNumber(idCounter)) + idCounter++;
         orders.add(this);
     }
@@ -74,7 +76,6 @@ public class Order {
 
     /**
      * Searches for an order in the static orders list by its ID.
-     *
      * @param orderId - ID of the order to find
      * @return the order if found, otherwise null
      */
@@ -197,15 +198,23 @@ public class Order {
         this.priority = priority;
     }
 
-    public boolean isStatus() {
-        return status;
-    }
+    public boolean isStatusComplete() {
+		return statusComplete;
+	}
 
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
+	public void setStatusComplete(boolean statusComplete) {
+		this.statusComplete = statusComplete;
+	}
 
-    public static ArrayList<Order> getOrders() {
+	public boolean isStatusAccepted() {
+		return statusAccepted;
+	}
+
+	public void setStatusAccepted(boolean statusAccepted) {
+		this.statusAccepted = statusAccepted;
+	}
+
+	public static ArrayList<Order> getOrders() {
         return orders;
     }
 
