@@ -23,6 +23,7 @@ public class Courier implements Serializable {
 	private long workingHours;
 	private int penalty;
 	private int blockStatus;
+	private boolean onlineStatus;
 	
 	/*
 	 * Конструктор берет атрибутом категорию перевозки. Все остальные атрибуты генерируются в процессе 
@@ -45,6 +46,7 @@ public class Courier implements Serializable {
 		this.workingHours = 0;
 		this.penalty = 0;
 		this.blockStatus = 0;
+		this.onlineStatus = false;
 		
 		ArrayList<Courier> couriers = new ArrayList<Courier>(CourierManager.getCourierList());
 		couriers.add(this);
