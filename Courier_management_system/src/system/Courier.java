@@ -15,6 +15,7 @@ import java.util.Scanner;
 
 public class Courier implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static final int ORDERS_FOR_BONUS = 5;
 	private static final String ID_TEXT = "courier";
 	private static final String DIRECTORY_PATH = "serializ";
 	private static final String NULL = null;
@@ -25,7 +26,7 @@ public class Courier implements Serializable {
 	private int penalty;
 	private int blockStatus;
 	private boolean onlineStatus;
-	private ArrayList<Order> orders;
+	private int bonusPoints;
 	
 	/*
 	 * Конструктор берет атрибутом категорию перевозки. Все остальные атрибуты генерируются в процессе 
@@ -49,7 +50,6 @@ public class Courier implements Serializable {
 		this.penalty = 0;
 		this.blockStatus = 0;
 		this.onlineStatus = false;
-		this.orders = new ArrayList<Order>();
 		
 		ArrayList<Courier> couriers = new ArrayList<Courier>(CourierManager.getCourierList());
 		couriers.add(this);
@@ -76,8 +76,8 @@ public class Courier implements Serializable {
 //				o.setCourierIDcomplete(NULL);
 			}
 		});
-		orders = confirmList;
-		return orders;
+		this.bonusPoints = confirmList.size()/ORDERS_FOR_BONUS;
+		return confirmList;
 
 	}
 
@@ -93,7 +93,7 @@ public class Courier implements Serializable {
 		double hours = duration.toHours();
 		double totalPenalty = penalty * penaltyCost;
 		penalty = 0;
-		double totalBonus = orders.size()/5*bonusCost;
+		double totalBonus = bonusPoints*bonusCost;
 		return hours * salary - totalPenalty + totalBonus;
 	}
 
@@ -203,10 +203,6 @@ public class Courier implements Serializable {
 
 	public void setOnlineStatus(boolean onlineStatus) {
 		this.onlineStatus = onlineStatus;
-	}
-
-	public ArrayList<Order> getOrders() {
-		return orders;
 	}
 
 	@Override

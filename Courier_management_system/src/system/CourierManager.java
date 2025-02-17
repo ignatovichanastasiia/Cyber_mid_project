@@ -47,7 +47,6 @@ public class CourierManager {
 		if (courierOrders.isEmpty()) {
 			courierList.forEach(c -> {
 				courierOrders.put(c.getId(), new ArrayList<Order>());
-
 			});
 		}
 		ArrayList<Order> newOne = new ArrayList(orders);
