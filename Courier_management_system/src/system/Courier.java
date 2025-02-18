@@ -19,6 +19,10 @@ public class Courier implements Serializable {
 	private static final String ID_TEXT = "courier";
 	private static final String DIRECTORY_PATH = "serializ";
 	private static final String NULL = null;
+	private static final double SALARY = 60;
+	private static final double PENALTY_COST = 250;
+	private static final double BONUS_COST = 500;
+	
 	private static Scanner sc = new Scanner(System.in);
 	private String id;
 	private String category; ////	REFRIGERATED, OVERSIZE, LIGHT
@@ -88,13 +92,13 @@ public class Courier implements Serializable {
 	 * account fines and bonuses.
 	 * 
 	 */
-	public double calculateSalary(double salary, double penaltyCost,double bonusCost) {
+	public double calculateSalary() {
 		Duration duration = Duration.ofHours(workingHours);
 		double hours = duration.toHours();
-		double totalPenalty = penalty * penaltyCost;
+		double totalPenalty = penalty * PENALTY_COST;
 		penalty = 0;
-		double totalBonus = bonusPoints*bonusCost;
-		return hours * salary - totalPenalty + totalBonus;
+		double totalBonus = bonusPoints*BONUS_COST;
+		return hours * SALARY - totalPenalty + totalBonus;
 	}
 
 	/*
