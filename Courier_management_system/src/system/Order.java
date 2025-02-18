@@ -1,3 +1,4 @@
+
 package system;
 
 import java.io.File;
@@ -12,8 +13,7 @@ import java.util.ArrayList;
 public class Order {
 
     private static final long serialVersionUID = 1L;
-//    private static final String BASE_DIRECTORY = "C:\\Users\\IvanS\\git\\Cyber_mid_project\\Courier_management_system\\Orders";
-    private static final String BASE_DIRECTORY = "orders";
+    private static final String BASE_DIRECTORY = "C:\\Users\\IvanS\\git\\Cyber_mid_project\\Courier_management_system\\Orders";
     private static final String ORDERS = "/orders";
     private static int idCounter = 1;
     private final String id;
@@ -24,6 +24,7 @@ public class Order {
     private boolean priority;
     private boolean statusComplete;
     private boolean statusAccepted;
+    private String courierIDcomplete;
     private static ArrayList<Order> orders = new ArrayList<Order>();
 
     /**
@@ -36,14 +37,15 @@ public class Order {
      * @param priority - Priority status of the order
      * @param status - Current status of the order
      */
-    public Order(String category, Duration loadingTime, Duration travelTime, boolean priority, boolean status) {
+    public Order(String category, Duration loadingTime, Duration travelTime) {
         this.category = category;
         this.loadingTime = loadingTime;
         this.travelTime = travelTime;
         this.delayTime = randomizeDelay(); // Initialize with a random delay
-        this.priority = priority;
+        this.priority = false;
         this.statusComplete = false;
         this.statusComplete = false;
+        this.courierIDcomplete = courierIDcomplete;
         this.id = getClass().getSimpleName().charAt(0) + "-" + "0".repeat(nullsNumber(idCounter)) + idCounter++;
         orders.add(this);
     }
@@ -226,5 +228,13 @@ public class Order {
     public String getId() {
         return id;
     }
+    public String getCourierIDcomplete() {
+		return courierIDcomplete;
+	}
+
+	public void setCourierIDcomplete(String courierIDcomplete) {
+		this.courierIDcomplete = courierIDcomplete;
+	}
+
 
 }

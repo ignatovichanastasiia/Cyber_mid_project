@@ -25,8 +25,12 @@ public class CourierManager {
 	public static void changeStatusToOnline(String id) {
 			Optional<Courier> courier = getCourierFromID(id);
 			if(courier.isPresent()) {
+				if(!courier.get().isBlockStatus()){
 				courier.get().setOnlineStatus(true);
-				System.out.println("Courier id: "+courier.get().getId()+" online to day.");
+				System.out.println("Courier id: "+courier.get().getId()+" online today.");
+				}else {
+					System.out.println("Courier "+ id +" is block");
+				}
 			}
 	}
 
