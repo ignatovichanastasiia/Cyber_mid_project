@@ -13,7 +13,7 @@ public class Order {
 
     private static final long serialVersionUID = 1L;
     private static final String BASE_DIRECTORY = "C:\\Users\\IvanS\\git\\Cyber_mid_project\\Courier_management_system\\Orders";
-    private static final String ORDERS = "/orders";
+    private static final String ORDERS = "\\orders";
     private static int idCounter = 1;
     private final String id;
     private String category;
