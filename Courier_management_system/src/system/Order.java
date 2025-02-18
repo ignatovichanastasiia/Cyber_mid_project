@@ -42,28 +42,11 @@ public class Order {
         this.travelTime = travelTime;
         this.delayTime = randomizeDelay(); // Initialize with a random delay
         this.priority = false;
+        this.statusAccepted = false;
         this.statusComplete = false;
-        this.statusComplete = false;
-        this.courierIDcomplete = courierIDcomplete;
+        this.courierIDcomplete = null;
         this.id = getClass().getSimpleName().charAt(0) + "-" + "0".repeat(nullsNumber(idCounter)) + idCounter++;
         orders.add(this);
-    }
-
-    /**
-     * Calculates the total travel time for the order by adding expected time, loading time, and delay time.
-     *
-     * @param orderId - ID of the order to calculate travel time for
-     * @return total travel time duration, or zero if order not found
-     */
-    private Duration calculateTravelTime(String orderId) {
-        Order order = findOrderById(orderId);
-        if (order != null) {
-            Duration travelTime = order.getExpectedTime().plus(order.getLoadingTime()).plus(order.getDelayTime());
-            return travelTime;
-        } else {
-            // Handle the case when the order is not found
-            return Duration.ZERO;
-        }
     }
 
     /**
