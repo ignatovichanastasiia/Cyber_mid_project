@@ -24,15 +24,27 @@ public class Report implements Serializable {
 	private static ArrayList<Order> completedOrders = new ArrayList<Order>();
 	private static ArrayList<Courier> couriers;
 
+	/**
+     * Constructor for creating a Report object.
+     *
+     * @param uncompletedOrders - List of uncompleted orders
+     * @param completedOrders - List of completed orders
+     * @param couriers - List of couriers
+     */	
 	public Report(ArrayList<Order> uncompletedOrders, ArrayList<Order> completedOrders, ArrayList<Courier> couriers) {
-		sortingOrdersByReadyStatus();
 		this.uncompletedOrders = uncompletedOrders;
 		this.completedOrders = completedOrders;
 		this.couriers = CourierManager.getCourierList();
 		this.workingTimeForOrders = calculateWorkingTimeOrder();
+		sortingOrdersByReadyStatus();
 		reports.add(this);
 	}
 
+	/**
+     * Calculates the total working time for completed orders.
+     *
+     * @return total working time for completed orders
+     */
 	private Duration calculateWorkingTimeOrder() {
 		workingTimeForOrders = Duration.ZERO;
 		for (Order order : Order.getOrders())
@@ -43,6 +55,11 @@ public class Report implements Serializable {
 		return workingTimeForOrders;
 	}
 
+	/**
+     * Calculates the total delay time for completed orders.
+     *
+     * @return total delay time for completed orders
+     */
 	private static Duration calculateDelaysOrder() {
 		Duration delayTimeForAll = Duration.ZERO;
 		for (Order order : Order.getOrders())
@@ -53,6 +70,9 @@ public class Report implements Serializable {
 		return delayTimeForAll;
 	}
 
+	/**
+     * Sorts orders by their completion status and updates the respective lists.
+     */
 	public static void sortingOrdersByReadyStatus() {
 		StringBuilder str = new StringBuilder("");
 		if (Order.getOrders().isEmpty()) {
@@ -71,25 +91,27 @@ public class Report implements Serializable {
 		System.out.println(str);
 	}
 
+	/**
+     * Generates a report of the orders and couriers.
+     */
 	public static void generateReport() {
 	    StringBuilder report = new StringBuilder();
-	    // Общие рабочие часы для завершенных заказов
+	    // Total working time for completed orders
 	    report.append("Total Working Time for Completed Orders: ").append(workingTimeForOrders).append("\n\n");
 	    
-	    // Общее количество выполненных и невыполненных заказов
+	    // Total number of completed and uncompleted orders
 	    report.append("Total number of completed orders: ").append(completedOrders.size()).append("\n");
 	    report.append("Total number of uncompleted orders: ").append(uncompletedOrders.size()).append("\n\n");
-	    // Общее время задержек по выполненным заказам
+	    
+	    // Total delay time for completed orders
 	    report.append("Total delay time for completed orders: ").append(calculateDelaysOrder()).append("\n\n");
 
-	    // Разбивка по курьерам и заказам
+	    // Breakdown by couriers and orders
 	    for (Courier courier : couriers) {
 	        report.append("Courier ID: ").append(courier.getId()).append("\n");
-	        report.append("Total Earnings: ").append().append("\n");
-	        report.append("Total Orders Completed: ").append(countCompletedOrders(courier)).append("\n");
-	        report.append("Total Working Hours: ").append(calculateWorkingHours(courier)).append("\n");
-	        report.append("Bonuses: ").append(calculateBonuses(courier)).append("\n");
-	        report.append("Penalties: ").append(calculatePenalties(courier)).append("\n\n");
+	        report.append("Total Earnings: ").append(courier.calculateSalary()).append("\n");
+	        report.append("Total Orders Completed: ").append(CourierManager.getCourierListOfOrdersById(courier.getId()).size()).append("\n");
+	        report.append("Total Working Hours: ").append(courier.getWorkingHours()).append("\n");
 	    }
 
 	    System.out.println(report.toString());
@@ -100,7 +122,6 @@ public class Report implements Serializable {
 	 */
 	private static void creatingDirAndFileReport() {
 		try {
-			// Использую Path и Paths для создания пути
 			Path directory = Paths.get(System.getProperty("user.home"), "git", "Cyber_mid_project",
 					"Courier_management_system", BASE_DIRECTORY);
 			if (Files.notExists(directory)) {
@@ -117,13 +138,13 @@ public class Report implements Serializable {
 		}
 	}
 
-	/**
-	 * Serializes the static reports list to a specified file.
-	 *
-	 * @param orders   - List of reports to serialize
-	 * @param fileName - Name of the file to save the serialized data
-	 * @throws IOException
-	 */
+    /**
+     * Serializes the static reports list to a specified file.
+     *
+     * @param reports - List of reports to serialize
+     * @param fileName - Name of the file to save the serialized data
+     * @throws IOException if an I/O error occurs
+     */
 	public static void serializeReports(ArrayList<Report> reports, String fileName) throws IOException {
 		creatingDirAndFileReport();
 		Path filePath = Paths.get(System.getProperty("user.home"), "git", "Cyber_mid_project",
@@ -134,12 +155,13 @@ public class Report implements Serializable {
 	}
 
 	/**
-	 * Deserializes the reports list from a specified file.
-	 *
-	 * @param fileName - Name of the file to read the serialized data from
-	 * @return deserialized list of reports
-	 * @throws IOException, ClassNotFoundException
-	 */
+     * Deserializes the reports list from a specified file.
+     *
+     * @param fileName - Name of the file to read the serialized data from
+     * @return deserialized list of reports
+     * @throws IOException if an I/O error occurs
+     * @throws ClassNotFoundException if the class of the serialized object cannot be found
+     */
 	@SuppressWarnings("unchecked")
 	public ArrayList<Report> deserializeOrders(String fileName) throws IOException, ClassNotFoundException {
 		Path filePath = Paths.get(System.getProperty("user.home"), "git", "Cyber_mid_project",
