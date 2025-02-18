@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 import java.time.Duration;
 import java.util.ArrayList;
 
-public class Order implements Seriazable {
+public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final String BASE_DIRECTORY = "C:\\Users\\IvanS\\git\\Cyber_mid_project\\Courier_management_system\\Orders";
