@@ -177,7 +177,20 @@ public class Main {
 			break;
 		case 2:
 			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			break;
+		case 6:
+			break;
+		case 7:
+			break;
+		case 0:
+			break;
 		default:
+			
 			System.out.println("""
 					Wrong number. Enter only numbers from the menues. Try again!
 					""");

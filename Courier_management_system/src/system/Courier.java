@@ -26,7 +26,7 @@ public class Courier implements Serializable {
 	private static Scanner sc = new Scanner(System.in);
 	private String id;
 	private String category; ////	REFRIGERATED, OVERSIZE, LIGHT
-	private long workingHours;
+	private Duration workingHours;
 	private int penalty;
 	private int blockStatus;
 	private boolean onlineStatus;
@@ -50,7 +50,8 @@ public class Courier implements Serializable {
 
 		this.id = ID_TEXT + now.format(formatter);
 		this.category = category;
-		this.workingHours = 0;
+		//
+		this.workingHours = Duration.ofHours(0);
 		this.penalty = 0;
 		this.blockStatus = 0;
 		this.onlineStatus = false;
@@ -93,7 +94,7 @@ public class Courier implements Serializable {
 	 * 
 	 */
 	public double calculateSalary() {
-		Duration duration = Duration.ofHours(workingHours);
+		Duration duration = workingHours;
 		double hours = duration.toHours();
 		double totalPenalty = penalty * PENALTY_COST;
 		penalty = 0;
@@ -182,11 +183,11 @@ public class Courier implements Serializable {
 	}
 
 	public Duration getWorkingHours() {
-		return Duration.ofHours(workingHours);
+		return workingHours;
 	}
 
 	public void setWorkingHours(Duration workingHours) {
-		this.workingHours = workingHours.toHours();
+		this.workingHours = workingHours;
 	}
 
 	public int getPenalty() {

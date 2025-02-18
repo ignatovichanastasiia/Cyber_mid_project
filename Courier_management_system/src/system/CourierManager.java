@@ -79,6 +79,8 @@ public class CourierManager {
 		});
 		return normal;
 	}
+	
+//	public static ArrayList() 
 
 	//  serializeCouriers() – сериализация всех курьеров.
 	public static void serializeCouriers() {
