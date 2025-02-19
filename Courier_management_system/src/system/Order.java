@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 import java.time.Duration;
 import java.util.ArrayList;
 
-public class Order {
+public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final String DIRECTORY_PATH = "serializ";
