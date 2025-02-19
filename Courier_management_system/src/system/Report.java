@@ -16,19 +16,19 @@ public class Report implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final String DIRECTORY_PATH = "serializ";
 	private static final String REPORT = "report";
-	private static Duration workingTimeForOrders; 
+	private static Duration workingTimeForOrders = calculateWorkingTimeOrder();
 	private static ArrayList<Report> reports = new ArrayList<Report>();
 	private static ArrayList<Order> uncompletedOrders = new ArrayList<Order>();
 	private static ArrayList<Order> completedOrders = new ArrayList<Order>();
 	private static ArrayList<Courier> couriers;
 
 	/**
-     * Constructor for creating a Report object.
-     *
-     * @param uncompletedOrders - List of uncompleted orders
-     * @param completedOrders - List of completed orders
-     * @param couriers - List of couriers
-     */	
+	 * Constructor for creating a Report object.
+	 *
+	 * @param uncompletedOrders - List of uncompleted orders
+	 * @param completedOrders   - List of completed orders
+	 * @param couriers          - List of couriers
+	 */
 	public Report(ArrayList<Order> uncompletedOrders, ArrayList<Order> completedOrders, ArrayList<Courier> couriers) {
 		this.uncompletedOrders = uncompletedOrders;
 		this.completedOrders = completedOrders;
@@ -39,11 +39,11 @@ public class Report implements Serializable {
 	}
 
 	/**
-     * Calculates the total working time for completed orders.
-     *
-     * @return total working time for completed orders
-     */
-	private Duration calculateWorkingTimeOrder() {
+	 * Calculates the total working time for completed orders.
+	 *
+	 * @return total working time for completed orders
+	 */
+	private static Duration calculateWorkingTimeOrder() {
 		workingTimeForOrders = Duration.ZERO;
 		for (Order order : Order.getOrders())
 			if (order.isStatusAccepted()) {
@@ -54,10 +54,10 @@ public class Report implements Serializable {
 	}
 
 	/**
-     * Calculates the total delay time for completed orders.
-     *
-     * @return total delay time for completed orders
-     */
+	 * Calculates the total delay time for completed orders.
+	 *
+	 * @return total delay time for completed orders
+	 */
 	private static Duration calculateDelaysOrder() {
 		Duration delayTimeForAll = Duration.ZERO;
 		for (Order order : Order.getOrders())
@@ -69,8 +69,8 @@ public class Report implements Serializable {
 	}
 
 	/**
-     * Sorts orders by their completion status and updates the respective lists.
-     */
+	 * Sorts orders by their completion status and updates the respective lists.
+	 */
 	public static void sortingOrdersByReadyStatus() {
 		StringBuilder str = new StringBuilder("");
 		if (Order.getOrders().isEmpty()) {
@@ -90,105 +90,118 @@ public class Report implements Serializable {
 	}
 
 	/**
-	 * Generates and prints a report containing various statistics about the orders and couriers.
-	 * This method calculates and displays the total working time for completed orders, the number
-	 * of completed and uncompleted orders, the total delay time for completed orders, and a 
-	 * breakdown of couriers including their total earnings, total orders completed, and total working hours.
+	 * Generates and prints a report containing various statistics about the orders
+	 * and couriers. This method calculates and displays the total working time for
+	 * completed orders, the number of completed and uncompleted orders, the total
+	 * delay time for completed orders, and a breakdown of couriers including their
+	 * total earnings, total orders completed, and total working hours.
 	 */
 	public static void generateReport() {
 		sortingOrdersByReadyStatus();
-	    StringBuilder report = new StringBuilder();
+		StringBuilder report = new StringBuilder();
 
-	    try {
-	        // Ensure that necessary collections and variables are not null
-	        if (workingTimeForOrders != null) {
-	            report.append("Total Working Time for Completed Orders: ").append(workingTimeForOrders).append("\n\n");
-	        }
+		try {
+			// Ensure that necessary collections and variables are not null
+			if (workingTimeForOrders != null) {
+				report.append("Total working time for completed orders: ").append(workingTimeForOrders).append("\n\n");
+				
+			} else {
+				System.out.println("No order was delivered this day");
+			}
 
-	        if (completedOrders != null) {
-	            report.append("Total number of completed orders: ").append(completedOrders.size()).append("\n");
-	        }
+			if (completedOrders != null) {
+				report.append("Total number of completed orders: ").append(completedOrders.size()).append("\n");
+				
+			} else {
+				System.out.println("There's no completed orders for today");
+			}
 
-	        if (uncompletedOrders != null) {
-	            report.append("Total number of uncompleted orders: ").append(uncompletedOrders.size()).append("\n\n");
-	        }
+			if (uncompletedOrders != null) {
+				report.append("Total number of uncompleted orders: ").append(uncompletedOrders.size()).append("\n\n");
+			
+			} else {
+				System.out.println("There's no uncompleted orders left");
+			}
 
-	        // Total delay time for completed orders
-	        report.append("Total delay time for completed orders: ").append(calculateDelaysOrder()).append("\n\n");
+			// Total delay time for completed orders
+			report.append("Total delay time for all completed orders: ").append(calculateDelaysOrder()).append("\n\n");
 
-	        // Breakdown by couriers and orders
-	        if (couriers != null) {
-	            for (Courier courier : couriers) {
-	                report.append("Courier ID: ").append(courier.getId()).append("\n");
-	                report.append("Total Earnings: ").append(courier.calculateSalary()).append("\n");
-	                report.append("Total Orders Completed: ").append(CourierManager.getCourierListOfOrdersById(courier.getId()).size()).append("\n");
-	                report.append("Total Working Hours: ").append(courier.getWorkingHours()).append("\n");
-	            }
-	        }
+			// Breakdown by couriers and orders
+			if (couriers != null) {
+				for (Courier courier : couriers) {
+					report.append("Courier ID: ").append(courier.getId()).append("\n");
+					report.append("Total Earnings: ").append(courier.calculateSalary()).append("\n");
+					report.append("Total Orders Completed: ")
+							.append(CourierManager.getCourierListOfOrdersById(courier.getId()).size()).append("\n");
+					report.append("Total Working Hours: ").append(courier.getWorkingHours()).append("\n");
+				}
+			}
 
-	        System.out.println(report.toString());
-	    } catch (Exception e) {
-	        System.err.println("Error generating report: " + e.getMessage());
-	    }
+			System.out.println(report.toString());
+		} catch (Exception e) {
+			System.err.println("Error generating report: " + e.getMessage());
+		}
 	}
-
 
 	/**
 	 * Serializes the reports ArrayList to a file.
 	 * 
-	 * This method writes the reports ArrayList to a .ser file using ObjectOutputStream.
+	 * This method writes the reports ArrayList to a .ser file using
+	 * ObjectOutputStream.
 	 * 
 	 * @return true if the serialization was successful, false otherwise.
 	 */
 	public static boolean serializeReports() {
 		File directoryForSerialization = new File(DIRECTORY_PATH);
-	    File serFile = new File(DIRECTORY_PATH, REPORT + ".ser");
+		File serFile = new File(DIRECTORY_PATH, REPORT + ".ser");
 
-	    try (ObjectOutputStream fileReportsOut = new ObjectOutputStream(new FileOutputStream(serFile))) {
-	    	if (!directoryForSerialization.exists()) {
+		try (ObjectOutputStream fileReportsOut = new ObjectOutputStream(new FileOutputStream(serFile))) {
+			if (!directoryForSerialization.exists()) {
 				directoryForSerialization.mkdir();
-			} serFile.createNewFile();
+			}
+			serFile.createNewFile();
 			System.out.println("Created file for serialization.");
-	        fileReportsOut.writeObject(reports);
-	        System.out.println("Reports were serialized: " + serFile.getPath());
-	        return true;  
-	    } catch (IOException e) {
-	        System.err.println("Error while serializing reports: " + e.getMessage());
-	        return false; 
-	    }
+			fileReportsOut.writeObject(reports);
+			System.out.println("Reports were serialized: " + serFile.getPath());
+			return true;
+		} catch (IOException e) {
+			System.err.println("Error while serializing reports: " + e.getMessage());
+			return false;
+		}
 	}
-	
+
 	/**
 	 * Deserializes the reports ArrayList from a specified file.
 	 * 
-	 * This method checks if the file exists and then reads the reports ArrayList 
-	 * from the file using ObjectInputStream. If the file is not found or an error occurs 
-	 * during deserialization, an error message is printed and false is returned.
+	 * This method checks if the file exists and then reads the reports ArrayList
+	 * from the file using ObjectInputStream. If the file is not found or an error
+	 * occurs during deserialization, an error message is printed and false is
+	 * returned.
 	 * 
 	 * @return true if the deserialization was successful, false otherwise.
 	 */
 	public static boolean deserializeReports() {
-	    File serFile = new File(DIRECTORY_PATH, REPORT + ".ser");
+		File serFile = new File(DIRECTORY_PATH, REPORT + ".ser");
 
-	    if (!serFile.exists()) {
-	        System.err.println("File not found: " + serFile.getPath());
-	        return false; // Failure
-	    }
+		if (!serFile.exists()) {
+			System.err.println("File not found: " + serFile.getPath());
+			return false; // Failure
+		}
 
-	    try (ObjectInputStream fileReportsIn = new ObjectInputStream(new FileInputStream(serFile))) {
-	        Object obj = fileReportsIn.readObject();
-	        if (obj instanceof ArrayList<?>) {
-	            reports = (ArrayList<Report>) obj;
-	            System.out.println("Reports were deserialized");
-	            return true; 
-	        } else {
-	            System.err.println("Deserialized object is not an ArrayList");
-	            return false; 
-	        }
-	    } catch (IOException | ClassNotFoundException e) {
-	        System.err.println("Error while deserializing reports: " + e.getMessage());
-	        return false; 
-	    }
+		try (ObjectInputStream fileReportsIn = new ObjectInputStream(new FileInputStream(serFile))) {
+			Object obj = fileReportsIn.readObject();
+			if (obj instanceof ArrayList<?>) {
+				reports = (ArrayList<Report>) obj;
+				System.out.println("Reports were deserialized");
+				return true;
+			} else {
+				System.err.println("Deserialized object is not an ArrayList");
+				return false;
+			}
+		} catch (IOException | ClassNotFoundException e) {
+			System.err.println("Error while deserializing reports: " + e.getMessage());
+			return false;
+		}
 	}
 
 }
