@@ -86,12 +86,18 @@ public class Order implements Serializable {
 	public static boolean serializeOrders() throws IOException {
 		File directoryForSerialization = new File(DIRECTORY_PATH);
 		File serFile = new File(DIRECTORY_PATH, ORDERS + ".ser");
-		try (ObjectOutputStream fileOrdersOut = new ObjectOutputStream(new FileOutputStream(serFile))) {
-			if (!directoryForSerialization.exists()) {
-				directoryForSerialization.mkdir();
-			}
+		if (!directoryForSerialization.exists()) {
+			directoryForSerialization.mkdir();
+		}
+		if(!serFile.exists()) {
+			try {
 			serFile.createNewFile();
 			System.out.println("Created file for serialization.");
+			}catch(IOException e) {
+				System.out.println("Problem with creating file for serialization"+e.getMessage());
+			}
+		}
+		try (ObjectOutputStream fileOrdersOut = new ObjectOutputStream(new FileOutputStream(serFile))) {
 			fileOrdersOut.writeObject(orders);
 			System.out.println("Courier was serialized into file: " + serFile.getPath());
 			return true;

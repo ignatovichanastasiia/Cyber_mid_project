@@ -14,6 +14,7 @@ public class CourierManager {
 	private static Map<String, ArrayList<Order>> courierOrders = new HashMap();
 	private static boolean normal;
 	private static boolean done;
+	public static Scanner sc;
 
 	// Добавление нового курьера
 	public static Courier addCourier(String category) {
@@ -56,6 +57,7 @@ public class CourierManager {
 
 	// Назначение курьера на заказ.
 	public static void assignCourierToOrder(String id, ArrayList<Order> orders) {
+		sc = new Scanner(System.in);
 		ArrayList<Order> newOne = new ArrayList<Order>();
 		courierList.forEach(c -> {
 			if (c.getId().equalsIgnoreCase(id)) {
@@ -94,10 +96,8 @@ public class CourierManager {
 	
 
 	private static boolean takeAnswer() {
-		try(Scanner sc = new Scanner(System.in)) {
 		String answer = sc.nextLine().trim();
 		return answer.equalsIgnoreCase("Y");
-		}
 	}
 
 	//  serializeCouriers() – сериализация всех курьеров.

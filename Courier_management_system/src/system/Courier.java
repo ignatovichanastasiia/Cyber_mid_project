@@ -135,16 +135,21 @@ public class Courier implements Serializable {
 	public boolean serialize() {
 		File directoryForSerialization = new File(DIRECTORY_PATH);
 		File serFile = new File(DIRECTORY_PATH, id + ".ser");
-		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(serFile))) {
-			if (!directoryForSerialization.exists()) {
-				directoryForSerialization.mkdir();
-			}
+		if (!directoryForSerialization.exists()) {
+			directoryForSerialization.mkdir();
+		}
+		if(!serFile.exists()) {
+			try {
 			serFile.createNewFile();
 			System.out.println("Created file for serialization.");
+			}catch(IOException e) {
+				System.out.println("Problem with creating file for serialization: "+e.getMessage());
+			}
+		}
+		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(serFile))) {
 			out.writeObject(this);
 			System.out.println("Courier was serialized into file: " + serFile.getPath());
 			return true;
-
 		} catch (IOException e) {
 			System.out.println("We have some problem with saving courier files: " + e.getMessage());
 			return false;

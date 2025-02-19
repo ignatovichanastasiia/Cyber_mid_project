@@ -29,6 +29,7 @@ public class Main {
 		startDistribution();
 		generateFinalReport();
 		sc.close();
+		CourierManager.sc.close();
 
 	}
 
