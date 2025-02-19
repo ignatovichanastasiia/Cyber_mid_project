@@ -10,7 +10,19 @@ public class Main {
 	private static final Object NULL = null;
 	private static Scanner sc;
 	private static int enterNum;
+	private static boolean done;
 
+	/*
+	 * The main method contains the primary methods that control the activation of
+	 * different stages of the program's operation. The main stages are: 1.
+	 * registration of couriers and orders; 2. assignment of orders to available
+	 * couriers; 3. generating a report on the results of the work.
+	 * 
+	 * (RUS)В методе main находятся основные методы, управляющие включением разных
+	 * этапов работы программы. Основные этапы: 1. регистрация курьеров и заказов;
+	 * 2. распределение заказов по имеющимся курьерам; 3. составление отчета по
+	 * итогам работы.
+	 */
 	public static void main(String[] args) {
 		sc = new Scanner(System.in);
 		startRegistration();
@@ -20,29 +32,61 @@ public class Main {
 
 	}
 
+	/*
+	 * The method starts the first stage of the program's operation – registration.
+	 * Logically, the first step is the deserialization of already existing objects:
+	 * these are the couriers in the database and the orders that are already in the
+	 * database. Then, the menu is activated, offering various options for working
+	 * with couriers, handling orders, as well as administration tasks: making
+	 * changes to various objects, printing lists of all objects, and preparing
+	 * random files for the program's operation in test mode.
+	 * 
+	 * (RUS)Метод запускает первый этап работы программы - регистрацию По логике,
+	 * сначала идет десериализация уже имеющихся объектов: это курьеры, которые есть
+	 * в базе и заказы, которые уже есть в базе. Далее включается меню, в котором
+	 * предлагаются различные меню для работы курьеров, для работы с заказами, а так
+	 * же для администрирования: внесения изменений в различные объекты,
+	 * распечатывания списков всех объектов, а так же подготовки рандомных файлов
+	 * для работы программы в тестовом режиме.
+	 * 
+	 */
 	private static void startRegistration() {
 		deserializationForStart();
 		while (true) {
 			RegistrationFirstStep();
-			if (CourierManager.getCourierList().size() > 1) {
-				if ((Order.getOrders().size()) > 4) {
-					System.out.println("Start distribution for this day? Y/N");
-					if (takeAnswer()) {
-						return;
+			if (CourierManager.getCourierList().size() > 1 && Order.getOrders().size() > 4) {
+				CourierManager.getCourierList().forEach(c -> {
+					if (c.isOnlineStatus()) {
+						System.out.println("Start distribution for this day? Y/N");
+						if (takeAnswer()) {
+							return;
+						}
 					}
-				}
-			}
+				});
+			}System.out.println("We back to registration!");
 		}
 	}
 
-//	TODO
-//– запуск второго периода (распределение заказов).
+	/*
+	 * This method triggers the order distribution process from the database to the
+	 * couriers available in the database and currently in online status. Couriers
+	 * who receive orders must sequentially confirm their workload.
+	 * 
+	 * (RUS) Этот метод запускает метод распределения заказов из базы по курьерам,
+	 * имеющимся в базе и находящихся в онлайн статусе. Курьеры, получившие
+	 * распределение должны поочередно подтвердить нагрузку.
+	 */
 	private static void startDistribution() {
 		OrderManager.distributeOrders();
 	}
 
-//	TODO
-//– запуск третьего периода (подведение итогов и создание отчетов).
+	/*
+	 * This method starts the third stage of the program's operation: summarizing
+	 * the results and generating reports.
+	 * 
+	 * (RUS) Этот метод запускает третий этап работы программы: подведение итогов и
+	 * создание отчетов.
+	 */
 	private static void generateFinalReport() {
 		Report.generateReport();
 		try {
@@ -56,10 +100,10 @@ public class Main {
 
 	private static void deserializationForStart() {
 		try {
-		CourierManager.deserializeCouriers();
-		Order.deserializeOrders();
-		}catch(Exception e) {
-			System.out.println("Problem with deserialization: "+e.getMessage());
+			CourierManager.deserializeCouriers();
+			Order.deserializeOrders();
+		} catch (Exception e) {
+			System.out.println("Problem with deserialization: " + e.getMessage());
 		}
 	}
 
@@ -380,6 +424,7 @@ public class Main {
 		for (int x = 0; x <= 10; x++) {
 			int random = 1 + (int) ((Math.random() * 3));
 			Courier courier = new Courier(takeCategory(random));
+			courier.setOnlineStatus(true);
 		}
 //		100 orders
 		for (int y = 0; y <= 100; y++) {

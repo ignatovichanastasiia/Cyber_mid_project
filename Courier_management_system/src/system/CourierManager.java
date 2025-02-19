@@ -12,6 +12,7 @@ public class CourierManager {
 	private static ArrayList<Courier> courierList = new ArrayList<Courier>();
 	private static Map<String, ArrayList<Order>> courierOrders = new HashMap();
 	private static boolean normal;
+	private static boolean done;
 
 	// Добавление нового курьера
 	public static Courier addCourier(String category) {
@@ -35,14 +36,15 @@ public class CourierManager {
 	}
 
 	public static Optional<Courier> getCourierFromID(String id) {
+		done = false;
 		Optional<Courier> courier = Optional.empty();
 		courierList.forEach(c -> {
 			if (c.getId().equalsIgnoreCase(id)) {
 				courier.of(c);
-			} else {
-				System.out.println("Courier with id: " + id + " not found");
+				done = true;
 			}
 		});
+		if(!done) System.out.println("Courier with id: " + id + " not found");
 		return courier;
 	}
 

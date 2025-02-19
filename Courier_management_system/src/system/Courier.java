@@ -22,52 +22,55 @@ public class Courier implements Serializable {
 	private static final double SALARY = 60;
 	private static final double PENALTY_COST = 250;
 	private static final double BONUS_COST = 500;
-	
+	private static int counter = 0;
+
 	private static Scanner sc = new Scanner(System.in);
 	private String id;
-	private String category; ////	REFRIGERATED, OVERSIZE, LIGHT
+	private String category; //// REFRIGERATED, OVERSIZE, LIGHT
 	private Duration workingHours;
 	private int penalty;
 	private int blockStatus;
 	private boolean onlineStatus;
 	private int bonusPoints;
-	
+
 	/*
-	 * Конструктор берет атрибутом категорию перевозки. Все остальные атрибуты генерируются в процессе 
-	 * создания объекта. Частью id является дата и время регистрации курьера. Так же внутри конструктора 
-	 * создающийся объект сразу попадает в лист курьеров в классе КурьерМенеджера
+	 * The constructor takes the transportation category as an attribute. All other
+	 * attributes are generated during the object creation process. Part of the id
+	 * is the date and time the courier was registered. Also, inside the
+	 * constructor, the created object immediately goes to the list of couriers in
+	 * the CourierManager class.
 	 * 
-	 * The constructor takes the transportation category as an attribute. All other attributes are 
-	 * generated during the object creation process. Part of the id is the date and time the courier 
-	 * was registered. Also, inside the constructor, the created object immediately goes to the list 
-	 * of couriers in the CourierManager class
+	 * (RUS)Конструктор берет атрибутом категорию перевозки. Все остальные атрибуты
+	 * генерируются в процессе создания объекта. Частью id является дата и время
+	 * регистрации курьера. Так же внутри конструктора создающийся объект сразу
+	 * попадает в лист курьеров в классе КурьерМенеджера
 	 * 
 	 */
 	public Courier(String category) {
 
-		LocalDateTime now = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
-		this.id = ID_TEXT + now.format(formatter);
+
+		this.id = genID();
 		this.category = category;
 		this.workingHours = Duration.ofHours(0);
 		this.penalty = 0;
 		this.blockStatus = 0;
 		this.onlineStatus = false;
-		
+
 		ArrayList<Courier> couriers = new ArrayList<Courier>(CourierManager.getCourierList());
 		couriers.add(this);
 		CourierManager.setCourierList(couriers);
 	}
 
+
 	/*
-	 * Подтверждение принятия заказа. Метод берет список распределенных заказов, а
-	 * возвращает список принятых. 
+	 * Confirmation of order acceptance. The method takes a list of distributed
+	 * orders and returns a list of accepted orders.
 	 * 
-	 * Confirmation of order acceptance. The method
-	 * takes a list of distributed orders and returns a list of accepted orders.
+	 * (RUS)Подтверждение принятия заказа. Метод берет список распределенных
+	 * заказов, а возвращает список принятых.
+	 * 
 	 */
-	//
 	public ArrayList<Order> confirmOrder(ArrayList<Order> orders) {
 		ArrayList<Order> confirmList = new ArrayList<Order>();
 		orders.forEach(o -> {
@@ -75,21 +78,19 @@ public class Courier implements Serializable {
 			String answer = sc.nextLine();
 			if (answer.equalsIgnoreCase("Y")) {
 				confirmList.add(o);
-			}else {
+			} else {
 				o.setStatusAccepted(false);
 //				o.setCourierIDcomplete(NULL);
 			}
 		});
-		this.bonusPoints = confirmList.size()/ORDERS_FOR_BONUS;
+		this.bonusPoints = confirmList.size() / ORDERS_FOR_BONUS;
 		return confirmList;
 
 	}
 
 	/*
-	 * Расчет зарплаты с учетом штрафов и премий. 
-	 * 
-	 * Salary calculation taking into
-	 * account fines and bonuses.
+	 * Salary calculation taking into account fines and bonuses. (RUS)Расчет
+	 * зарплаты с учетом штрафов и премий.
 	 * 
 	 */
 	public double calculateSalary() {
@@ -97,23 +98,25 @@ public class Courier implements Serializable {
 		double hours = duration.toHours();
 		double totalPenalty = penalty * PENALTY_COST;
 		penalty = 0;
-		double totalBonus = bonusPoints*BONUS_COST;
+		double totalBonus = bonusPoints * BONUS_COST;
 		bonusPoints = 0;
 		return hours * SALARY - totalPenalty + totalBonus;
 	}
 
 	/*
-	 * Добавляет единицу штрафа. Adds penalty.
+	 * Adds penalty.
+	 * 
+	 * (RUS)Добавляет единицу штрафа.
+	 * 
 	 */
 	public int addPenalty() {
 		return ++penalty;
 	}
 
 	/*
-	 * Блокирует курьера на 2 дня из-за превышения лимита рабочих часов. 
+	 * Blocks the courier for 2 days due to exceeding the working hours limit.
 	 * 
-	 * Blocks the
-	 * courier for 2 days due to exceeding the working hours limit.
+	 * (RUS)Блокирует курьера на 2 дня из-за превышения лимита рабочих часов.
 	 */
 	public void blockCourier() {
 		if (blockStatus > 0) {
@@ -124,9 +127,10 @@ public class Courier implements Serializable {
 	}
 
 	/*
-	 * Сериализация данных курьера. 
-	 * 
 	 * Serialization of courier data.
+	 * 
+	 * (RUS)Сериализация данных курьера.
+	 * 
 	 */
 	public boolean serialize() {
 		File directoryForSerialization = new File(DIRECTORY_PATH);
@@ -148,27 +152,29 @@ public class Courier implements Serializable {
 	}
 
 	/*
-	 * Десериализация данных курьера из файла. 
+	 * Deserialization of courier data from a file.
 	 * 
-	 * Deserialization of courier data from
-	 * a file.
+	 * (RUS)Десериализация данных курьера из файла.
+	 * 
 	 */
 	public boolean deserialize() {
 		File serFile = new File(DIRECTORY_PATH, id + ".ser");
-		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(serFile.getPath()))) {
-			Courier deserializedEntry = (Courier) in.readObject();
-			if (blockStatus > 0) {
-				this.blockStatus = --blockStatus;
+		if (serFile.exists()) {
+			try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(serFile.getPath()))) {
+				Courier deserializedEntry = (Courier) in.readObject();
+				if (blockStatus > 0) {
+					this.blockStatus = --blockStatus;
+				}
+				System.out.println("Courier was deserialized: " + deserializedEntry.id);
+				System.out.println(deserializedEntry.toString());
+				return true;
+			} catch (IOException | ClassNotFoundException e) {
+				System.out.println("We have troble with deserialization: " + e.getMessage());
+				return false;
 			}
-			System.out.println("Courier was deserialized: " + deserializedEntry.id);
-			System.out.println(deserializedEntry.toString());
-		} catch (IOException | ClassNotFoundException e) {
-			System.out.println("We have troble with deserialization: " + e.getMessage());
-			return false;
 		}
-		return true;
+		return false;		
 	}
-
 
 	public String getId() {
 		return id;
@@ -204,12 +210,13 @@ public class Courier implements Serializable {
 
 	public void setOnlineStatus(boolean onlineStatus) {
 		this.onlineStatus = onlineStatus;
+		if(onlineStatus) System.out.println("Courier is online! Welcome to this day!");
 	}
-	
+
 	public boolean isBlockStatus() {
 		return blockStatus > 0;
 	}
-	
+
 	public int getBlockStatus() {
 		return blockStatus;
 	}
@@ -218,17 +225,22 @@ public class Courier implements Serializable {
 		this.blockStatus = blockStatus;
 	}
 
-	public static String getDirectoryPath() {
-		return DIRECTORY_PATH;
-	}
-
 	@Override
 	public String toString() {
 		return "Courier [id=" + id + ", category=" + category + ", workingHours=" + workingHours + ", penalty="
-				+ penalty + ", blockStatus=" + blockStatus + ", onlineStatus=" + onlineStatus+ "]";
+				+ penalty + ", blockStatus=" + blockStatus + ", onlineStatus=" + onlineStatus + "]\n";
 	}
 	
+	public static String getDirectoryPath() {
+		return DIRECTORY_PATH;
+	}
 	
+	private static String genID() {
+		counter++;
+		LocalDateTime now = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+		return ID_TEXT + now.format(formatter)+counter;
+	}
 
 }
 
