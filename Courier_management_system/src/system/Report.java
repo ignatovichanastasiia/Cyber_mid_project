@@ -1,12 +1,10 @@
+
 package system;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -18,7 +16,7 @@ public class Report implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final String DIRECTORY_PATH = "serializ";
 	private static final String REPORT = "report";
-	private static Duration workingTimeForOrders; // это все данные с заказа: грузим, едем, проблемы в дороге
+	private static Duration workingTimeForOrders; 
 	private static ArrayList<Report> reports = new ArrayList<Report>();
 	private static ArrayList<Order> uncompletedOrders = new ArrayList<Order>();
 	private static ArrayList<Order> completedOrders = new ArrayList<Order>();
