@@ -96,6 +96,7 @@ public class Report implements Serializable {
 	 * breakdown of couriers including their total earnings, total orders completed, and total working hours.
 	 */
 	public static void generateReport() {
+		Report.sortingOrdersByReadyStatus();
 	    StringBuilder report = new StringBuilder();
 
 	    try {
@@ -140,18 +141,23 @@ public class Report implements Serializable {
 	 * @return true if the serialization was successful, false otherwise.
 	 */
 	public static boolean serializeReports() {
+		File directoryForSerialization = new File(DIRECTORY_PATH);
 	    File serFile = new File(DIRECTORY_PATH, REPORT + ".ser");
 
 	    try (ObjectOutputStream fileReportsOut = new ObjectOutputStream(new FileOutputStream(serFile))) {
+	    	if (!directoryForSerialization.exists()) {
+				directoryForSerialization.mkdir();
+			} serFile.createNewFile();
+			System.out.println("Created file for serialization.");
 	        fileReportsOut.writeObject(reports);
-	        System.out.println("Reports were serialized");
+	        System.out.println("Reports were serialized: " + serFile.getPath());
 	        return true;  
 	    } catch (IOException e) {
 	        System.err.println("Error while serializing reports: " + e.getMessage());
 	        return false; 
 	    }
 	}
-
+	
 	/**
 	 * Deserializes the reports ArrayList from a specified file.
 	 * 
@@ -184,6 +190,5 @@ public class Report implements Serializable {
 	        return false; 
 	    }
 	}
-
 
 }
