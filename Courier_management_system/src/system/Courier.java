@@ -210,7 +210,7 @@ public class Courier implements Serializable {
 
 	public void setOnlineStatus(boolean onlineStatus) {
 		this.onlineStatus = onlineStatus;
-		if(onlineStatus) System.out.println("Courier is online! Welcome to this day!");
+		if(onlineStatus) System.out.println("Courier "+id+" is online! Welcome to this day!");
 	}
 
 	public boolean isBlockStatus() {

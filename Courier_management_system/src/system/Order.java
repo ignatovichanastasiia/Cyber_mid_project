@@ -13,10 +13,7 @@ import java.util.ArrayList;
 public class Order implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-//    4test
-//    private static final String BASE_DIRECTORY = "C:\\Users\\IvanS\\git\\Cyber_mid_project\\Courier_management_system\\Orders";
-	private static final String BASE_DIRECTORY = "orders";
-//    private static final String ORDERS = "\\orders";
+	private static final String DIRECTORY_PATH = "serializ";
 	private static final String ORDERS = "orders";
 	private static int idCounter = 1;
 	private final String id;
@@ -80,46 +77,27 @@ public class Order implements Serializable {
 	}
 
 	/**
-	 * Creates the base directory and orders file if they do not exist.
-	 */
-	private static void creatingDirAndFileOrders() {
-		// 4test
-//        File directory = new File(BASE_DIRECTORY);
-//        if (!directory.exists()) {
-//            directory.mkdirs();
-//        }
-//        File usersDir = new File(BASE_DIRECTORY + ORDERS);
-		File usersDir = new File(BASE_DIRECTORY);
-		if (!usersDir.exists()) {
-			usersDir.mkdir();
-//            String filePath = BASE_DIRECTORY + ORDERS + "/" + "Orders.ser";
-			String filePath = ORDERS + ".ser";
-			File fileName = new File(BASE_DIRECTORY, filePath);
-//            File fileName = new File(filePath);
-			try {
-				fileName.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
 	 * Serializes the static orders list to a specified file.
 	 *
 	 * @param orders   - List of orders to serialize
 	 * @param fileName - Name of the file to save the serialized data
 	 * @throws IOException
 	 */
-	public static void serializeOrders() throws IOException {
-		creatingDirAndFileOrders();
-//        4test
-//        try (ObjectOutputStream fileOrders = new ObjectOutputStream(new FileOutputStream(fileName))) {
-//            fileOrders.writeObject(orders);
-//        }
-		File userFile = new File(BASE_DIRECTORY, ORDERS + ".ser");
-		try (ObjectOutputStream fileOrders = new ObjectOutputStream(new FileOutputStream(userFile))) {
-			fileOrders.writeObject(orders);
+	public static boolean serializeOrders() throws IOException {
+		File directoryForSerialization = new File(DIRECTORY_PATH);
+		File serFile = new File(DIRECTORY_PATH, ORDERS + ".ser");
+		try (ObjectOutputStream fileOrdersOut = new ObjectOutputStream(new FileOutputStream(serFile))) {
+			if (!directoryForSerialization.exists()) {
+				directoryForSerialization.mkdir();
+			}
+			serFile.createNewFile();
+			System.out.println("Created file for serialization.");
+			fileOrdersOut.writeObject(orders);
+			System.out.println("Courier was serialized into file: " + serFile.getPath());
+			return true;
+		} catch (IOException e) {
+			System.out.println("We have some problem with saving courier files: " + e.getMessage());
+			return false;
 		}
 	}
 
@@ -130,10 +108,8 @@ public class Order implements Serializable {
 	 * @return deserialized list of orders
 	 * @throws IOException, ClassNotFoundException
 	 */
-	@SuppressWarnings("unchecked")
-	// 4test
 	public static ArrayList<Order> deserializeOrders() throws IOException, ClassNotFoundException {
-		File userFile = new File(BASE_DIRECTORY, ORDERS + ".ser");
+		File userFile = new File(DIRECTORY_PATH, ORDERS + ".ser");
 		if (userFile.exists()) {
 			try (ObjectInputStream fileOrders = new ObjectInputStream(new FileInputStream(userFile))) {
 				orders = (ArrayList<Order>) fileOrders.readObject();
@@ -179,11 +155,11 @@ public class Order implements Serializable {
 		this.loadingTime = loadingTime;
 	}
 
-	public Duration getExpectedTime() {
+	public Duration getTravelTime() {
 		return travelTime;
 	}
 
-	public void setExpectedTime(Duration expectedTime) {
+	public void setTravelTime(Duration expectedTime) {
 		this.travelTime = expectedTime;
 	}
 
@@ -246,7 +222,5 @@ public class Order implements Serializable {
 				+ statusComplete + ", statusAccepted=" + statusAccepted + ", courierIDcomplete=" + courierIDcomplete
 				+ "]\n";
 	}
-	
-	
 
 }

@@ -54,7 +54,7 @@ public class OrderManager {
 	    // Добавляем оставшиеся заказы
 	    for (Order order : Order.getOrders()) {
 	        if (!order.isStatusAccepted()) { // Проверяем статус заказа
-	        	Duration orderTime = order.getLoadingTime().plus(order.getExpectedTime());
+	        	Duration orderTime = order.getLoadingTime().plus(order.getTravelTime());
 	            if (totalTime.plus(orderTime).compareTo(limit) <= 0) {
 	                listOrdersToDo.add(order);
 	                totalTime = totalTime.plus(orderTime);
@@ -76,9 +76,9 @@ public class OrderManager {
      */
 	private static Duration addOrdersToListToDo(ArrayList<Order> orders, Duration totalTime, Duration limit) {
 		ArrayList<Order> sortedOrders = new ArrayList<>(orders);
-		sortedOrders.sort(Comparator.comparing(order -> order.getLoadingTime().plus(order.getExpectedTime())));
+		sortedOrders.sort(Comparator.comparing(order -> order.getLoadingTime().plus(order.getTravelTime())));
 		for (Order order : sortedOrders) {
-			Duration orderTime = order.getLoadingTime().plus(order.getExpectedTime());
+			Duration orderTime = order.getLoadingTime().plus(order.getTravelTime());
 			if (totalTime.plus(orderTime).compareTo(limit) <= 0 && !order.isStatusAccepted()) {
 				listOrdersToDo.add(order);
 				totalTime = totalTime.plus(orderTime);

@@ -54,16 +54,21 @@ public class Main {
 		deserializationForStart();
 		while (true) {
 			RegistrationFirstStep();
+			done = false;
 			if (CourierManager.getCourierList().size() > 1 && Order.getOrders().size() > 4) {
 				CourierManager.getCourierList().forEach(c -> {
 					if (c.isOnlineStatus()) {
-						System.out.println("Start distribution for this day? Y/N");
-						if (takeAnswer()) {
-							return;
-						}
+						done = true;
 					}
 				});
-			}System.out.println("We back to registration!");
+				if (done) {
+					System.out.println("Start distribution for this day? Y/N");
+					if (takeAnswer()) {
+						return;
+					}
+				}
+			}
+			System.out.println("We back to registration!");
 		}
 	}
 
@@ -123,7 +128,7 @@ public class Main {
 
 	private static void RegistrationSecondStep(int role) {
 		if (role == 0) {
-			System.out.println("Bye.");
+			System.out.println("\n");
 			return;
 		}
 		switch (role) {
@@ -392,9 +397,7 @@ public class Main {
 				break;
 			case 3:
 				Duration travelTime = Duration.ofHours(Long.parseLong(value.trim()));
-				order.setExpectedTime(travelTime);
-//				TODO
-//				order.setTravelTime(travelTime);
+				order.setTravelTime(travelTime);
 				System.out.println("Travel time was changed: " + order.toString());
 				break;
 			case 4:
