@@ -96,7 +96,7 @@ public class Report implements Serializable {
 	 * breakdown of couriers including their total earnings, total orders completed, and total working hours.
 	 */
 	public static void generateReport() {
-		Report.sortingOrdersByReadyStatus();
+		sortingOrdersByReadyStatus();
 	    StringBuilder report = new StringBuilder();
 
 	    try {
