@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Scanner;
 
 public class CourierManager {
 	private static final int MAX_WORK_HOURS = 11;
@@ -44,7 +45,8 @@ public class CourierManager {
 				done = true;
 			}
 		});
-		if(!done) System.out.println("Courier with id: " + id + " not found");
+		if (!done)
+			System.out.println("Courier with id: " + id + " not found");
 		return courier;
 	}
 
@@ -54,13 +56,21 @@ public class CourierManager {
 
 	// Назначение курьера на заказ.
 	public static void assignCourierToOrder(String id, ArrayList<Order> orders) {
-		if (courierOrders.isEmpty()) {
-			courierList.forEach(c -> {
-				courierOrders.put(c.getId(), new ArrayList<Order>());
-			});
-		}
-		ArrayList<Order> newOne = new ArrayList(orders);
-		courierOrders.put(id, newOne);
+		ArrayList<Order> newOne = new ArrayList<Order>();
+		courierList.forEach(c -> {
+			if (c.getId().equalsIgnoreCase(id)) {
+				System.out.println("Courier "+id+ " assign orders: ");
+				orders.forEach(o -> {
+					System.out.println(o.toString()+"\nAssign this order? Y/N");
+					if(takeAnswer()) {
+						newOne.add(o);
+					}else {
+						o.setStatusAccepted(false);
+					}
+				});
+				courierOrders.put(c.getId(), newOne);
+			}
+		});		
 	}
 
 	//  checkWorkTime() – проверка времени работы курьера.
@@ -80,6 +90,14 @@ public class CourierManager {
 			}
 		});
 		return normal;
+	}
+	
+
+	private static boolean takeAnswer() {
+		try(Scanner sc = new Scanner(System.in)) {
+		String answer = sc.nextLine().trim();
+		return answer.equalsIgnoreCase("Y");
+		}
 	}
 
 	//  serializeCouriers() – сериализация всех курьеров.
