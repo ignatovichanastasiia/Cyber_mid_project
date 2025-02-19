@@ -6,14 +6,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.time.Duration;
 import java.util.ArrayList;
 
-public class Order {
+public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final String BASE_DIRECTORY = "C:\\Users\\IvanS\\git\\Cyber_mid_project\\Courier_management_system\\Orders";
-    private static final String ORDERS = "\\orders";
+//    4test
+//    private static final String BASE_DIRECTORY = "C:\\Users\\IvanS\\git\\Cyber_mid_project\\Courier_management_system\\Orders";
+    private static final String BASE_DIRECTORY = "orders";
+//    private static final String ORDERS = "\\orders";
+    private static final String ORDERS = "orders";
     private static int idCounter = 1;
     private final String id;
     private String category;
@@ -77,15 +81,19 @@ public class Order {
      * Creates the base directory and orders file if they do not exist.
      */
     private static void creatingDirAndFileOrders() {
-        File directory = new File(BASE_DIRECTORY);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
-        File usersDir = new File(BASE_DIRECTORY + ORDERS);
+    	 //4test
+//        File directory = new File(BASE_DIRECTORY);
+//        if (!directory.exists()) {
+//            directory.mkdirs();
+//        }
+//        File usersDir = new File(BASE_DIRECTORY + ORDERS);
+        File usersDir = new File(BASE_DIRECTORY);
         if (!usersDir.exists()) {
             usersDir.mkdir();
-            String filePath = BASE_DIRECTORY + ORDERS + "/" + "Orders.ser";
-            File fileName = new File(filePath);
+//            String filePath = BASE_DIRECTORY + ORDERS + "/" + "Orders.ser";
+            String filePath = ORDERS + ".ser";
+            File fileName = new File(BASE_DIRECTORY, filePath);
+//            File fileName = new File(filePath);
             try {
                 fileName.createNewFile();
             } catch (IOException e) {
@@ -101,11 +109,16 @@ public class Order {
      * @param fileName - Name of the file to save the serialized data
      * @throws IOException
      */
-    public static void serializeOrders(ArrayList<Order> orders, String fileName) throws IOException {
+    public static void serializeOrders() throws IOException {
         creatingDirAndFileOrders();
-        try (ObjectOutputStream fileOrders = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            fileOrders.writeObject(orders);
-        }
+//        4test
+//        try (ObjectOutputStream fileOrders = new ObjectOutputStream(new FileOutputStream(fileName))) {
+//            fileOrders.writeObject(orders);
+//        }
+        File userFile = new File(BASE_DIRECTORY, ORDERS + ".ser");
+        try (ObjectOutputStream fileOrders = new ObjectOutputStream(new FileOutputStream(userFile))) {
+          fileOrders.writeObject(orders);
+      }
     }
 
     /**
@@ -116,8 +129,10 @@ public class Order {
      * @throws IOException, ClassNotFoundException
      */
     @SuppressWarnings("unchecked")
-    public ArrayList<Order> deserializeOrders(String fileName) throws IOException, ClassNotFoundException {
-        try (ObjectInputStream fileOrders = new ObjectInputStream(new FileInputStream(fileName))) {
+    //4test
+    public static ArrayList<Order> deserializeOrders() throws IOException, ClassNotFoundException {
+    	File userFile = new File(BASE_DIRECTORY, ORDERS + ".ser");
+        try (ObjectInputStream fileOrders = new ObjectInputStream(new FileInputStream(userFile))) {
             orders = (ArrayList<Order>) fileOrders.readObject();
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error while finding an order: " + e.getMessage());

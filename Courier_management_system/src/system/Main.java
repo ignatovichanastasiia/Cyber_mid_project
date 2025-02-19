@@ -21,6 +21,7 @@ public class Main {
 	}
 
 	private static void startRegistration() {
+		deserializationForStart();
 		while (true) {
 			RegistrationFirstStep();
 			if (CourierManager.getCourierList().size() > 1) {
@@ -34,14 +35,32 @@ public class Main {
 		}
 	}
 
-	private static void startDistribution() {
-//		TODO
+//	TODO
 //– запуск второго периода (распределение заказов).
+	private static void startDistribution() {
+		OrderManager.distributeOrders();
 	}
 
-	private static void generateFinalReport() {
-//		TODO
+//	TODO
 //– запуск третьего периода (подведение итогов и создание отчетов).
+	private static void generateFinalReport() {
+		Report.generateReport();
+		try {
+			CourierManager.serializeCouriers();
+			Order.serializeOrders();
+		} catch (Exception e) {
+			System.out.println("Problem with serialization: " + e.getMessage());
+		}
+		System.out.println("This day is over.");
+	}
+
+	private static void deserializationForStart() {
+		try {
+		CourierManager.deserializeCouriers();
+		Order.deserializeOrders();
+		}catch(Exception e) {
+			System.out.println("Problem with deserialization: "+e.getMessage());
+		}
 	}
 
 	private static void RegistrationFirstStep() {
@@ -358,18 +377,18 @@ public class Main {
 
 	private static void bufOrdersAndCouriers() {
 //		10 couriers
-		for(int x = 0; x<=10;x++) {
-			int random = 1+(int)((Math.random() * 3));
+		for (int x = 0; x <= 10; x++) {
+			int random = 1 + (int) ((Math.random() * 3));
 			Courier courier = new Courier(takeCategory(random));
 		}
 //		100 orders
-		for(int y = 0;y<=100;y++) {
-			int chooseCategory = 1+(int)((Math.random() * 3));
-			long loadingTime = 1+(long)((Math.random() * 20));
+		for (int y = 0; y <= 100; y++) {
+			int chooseCategory = 1 + (int) ((Math.random() * 3));
+			long loadingTime = 1 + (long) ((Math.random() * 20));
 			Duration lTime = Duration.ofMinutes(loadingTime);
-			long travelTime = 1+(long)((Math.random() * 240));
+			long travelTime = 1 + (long) ((Math.random() * 240));
 			Duration tTime = Duration.ofMinutes(travelTime);
-			Order order = new Order(takeCategory(chooseCategory),lTime,tTime);
+			Order order = new Order(takeCategory(chooseCategory), lTime, tTime);
 		}
 
 	}
@@ -393,7 +412,7 @@ public class Main {
 		ArrayList<Courier> courierList = new ArrayList<Courier>();
 	}
 
-	//TODO
+	// TODO
 	private static void deleteAllOrders() {
 //		File directory = new File(Order.getBasePath(),Order.getOrders();
 		File directory = new File("orders");
