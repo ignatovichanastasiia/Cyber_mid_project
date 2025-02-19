@@ -10,7 +10,6 @@ public class OrderManager {
 	private static ArrayList<Order> priorityOrders = new ArrayList<Order>();
 	private static final Duration LIMIT_WORKING_HOURS = Duration.ofHours(8);
 
-	// displayAssingedOrders(Courier ID) – отображение назначенных конкретному
 
     /**
      * Distributes orders among couriers. It iterates through the list of couriers and 
@@ -24,7 +23,7 @@ public class OrderManager {
 	            System.out.println("The courier " + courier.getId() + " is offline");
 	        } else {
 	            // Выбор заказов в пределах оставшихся рабочих часов курьера
-	            selectOrdersWithinLimit(LIMIT_WORKING_HOURS);
+	            selectOrdersWithinLimit(LIMIT_WORKING_HOURS, courier.getCategory());
 	            // Назначение курьера на выбранные заказы
 	            CourierManager.assignCourierToOrder(courier.getId(), listOrdersToDo);
 	            System.out.println("Orders have been assigned to courier " + courier.getId());
@@ -44,16 +43,17 @@ public class OrderManager {
      * to add orders while ensuring the total time does not exceed the limit.
      *
      * @param limit - the remaining working hours of the courier
+     * @param category - the category of the courier's car
      * @return ArrayList<Order> - list of selected orders
      */
-	public static ArrayList<Order> selectOrdersWithinLimit(Duration limit) {
+	public static ArrayList<Order> selectOrdersWithinLimit(Duration limit, String category) {
 	    listOrdersToDo.clear(); // Очищаем список для новых отобранных заказов
 	    Duration totalTime = Duration.ZERO;
 	    // Добавляем приоритетные заказы
-	    totalTime = addOrdersToListToDo(priorityOrders, totalTime, limit);
+	    totalTime = addOrdersToListToDo(priorityOrders, totalTime, limit, category);
 	    // Добавляем оставшиеся заказы
 	    for (Order order : Order.getOrders()) {
-	        if (!order.isStatusAccepted()) { // Проверяем статус заказа
+	        if (!order.isStatusAccepted() && order.getCategory().equalsIgnoreCase(category)) { // Проверяем статус заказа
 	        	Duration orderTime = order.getLoadingTime().plus(order.getTravelTime());
 	            if (totalTime.plus(orderTime).compareTo(limit) <= 0) {
 	                listOrdersToDo.add(order);
@@ -72,14 +72,15 @@ public class OrderManager {
      * @param orders - list of orders to sort and add
      * @param totalTime - current total time of completing orders
      * @param limit - limit of time for completing orders
+     * @param category - category of couriers car
      * @return totalTime - updated total time of completing orders
      */
-	private static Duration addOrdersToListToDo(ArrayList<Order> orders, Duration totalTime, Duration limit) {
+	private static Duration addOrdersToListToDo(ArrayList<Order> orders, Duration totalTime, Duration limit, String category) {
 		ArrayList<Order> sortedOrders = new ArrayList<>(orders);
 		sortedOrders.sort(Comparator.comparing(order -> order.getLoadingTime().plus(order.getTravelTime())));
 		for (Order order : sortedOrders) {
 			Duration orderTime = order.getLoadingTime().plus(order.getTravelTime());
-			if (totalTime.plus(orderTime).compareTo(limit) <= 0 && !order.isStatusAccepted()) {
+			if (totalTime.plus(orderTime).compareTo(limit) <= 0 && !order.isStatusAccepted() && order.getCategory().equalsIgnoreCase(category)) {
 				listOrdersToDo.add(order);
 				totalTime = totalTime.plus(orderTime);
 			} else {
