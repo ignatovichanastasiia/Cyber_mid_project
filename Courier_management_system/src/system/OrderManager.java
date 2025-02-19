@@ -1,4 +1,3 @@
-
 package system;
 
 import java.time.Duration;
@@ -19,19 +18,25 @@ public class OrderManager {
      * working hours are exhausted, it prints a message. Calls selectOrdersWithinLimit 
      * method to select orders within the courier's working hours limit.
      */
-	private static void distributeOrders() {
-		for (Courier courier : CourierManager.getCourierList()) {
-			if (!courier.isOnlineStatus()) {
-				System.out.println("The courier " + courier.getId() + " is offline");
-			} else {
-				selectOrdersWithinLimit(LIMIT_WORKING_HOURS);
-				CourierManager.assignCourierToOrder(courier.getId(), listOrdersToDo);
-				System.out.println("Orders have been assigned to courier " + courier.getId());
-			}	
-		} for (Order listOrdersToDo: Order.getOrders()) {
-			listOrdersToDo.setStatusAccepted(true);
-		}
+	public static void distributeOrders() {
+	    for (Courier courier : CourierManager.getCourierList()) {
+	        if (!courier.isOnlineStatus()) {
+	            System.out.println("The courier " + courier.getId() + " is offline");
+	        } else {
+	            // Выбор заказов в пределах оставшихся рабочих часов курьера
+	            selectOrdersWithinLimit(LIMIT_WORKING_HOURS);
+	            // Назначение курьера на выбранные заказы
+	            CourierManager.assignCourierToOrder(courier.getId(), listOrdersToDo);
+	            System.out.println("Orders have been assigned to courier " + courier.getId());
+
+	            // Помечаем назначенные заказы как принятые
+	            for (Order order : listOrdersToDo) {
+	                order.setStatusAccepted(true);
+	            }
+	        }
+	    }
 	}
+
 
 	/**
      * Selects orders within the given time limit. First clears listOrdersToDo, then adds 
@@ -42,13 +47,21 @@ public class OrderManager {
      * @return ArrayList<Order> - list of selected orders
      */
 	public static ArrayList<Order> selectOrdersWithinLimit(Duration limit) {
-		listOrdersToDo.clear(); // Очищаем список для новых отобранных заказов
-		Duration totalTime = Duration.ZERO;
-		// Добавляем приоритетные заказы
-		totalTime = addOrdersToListToDo(priorityOrders, totalTime, limit);
-		// Добавляем оставшиеся заказы
-		addOrdersToListToDo(Order.getOrders(), totalTime, limit);
-		return listOrdersToDo;
+	    listOrdersToDo.clear(); // Очищаем список для новых отобранных заказов
+	    Duration totalTime = Duration.ZERO;
+	    // Добавляем приоритетные заказы
+	    totalTime = addOrdersToListToDo(priorityOrders, totalTime, limit);
+	    // Добавляем оставшиеся заказы
+	    for (Order order : Order.getOrders()) {
+	        if (!order.isStatusAccepted()) { // Проверяем статус заказа
+	        	Duration orderTime = order.getLoadingTime().plus(order.getExpectedTime());
+	            if (totalTime.plus(orderTime).compareTo(limit) <= 0) {
+	                listOrdersToDo.add(order);
+	                totalTime = totalTime.plus(orderTime);
+	            }
+	        }
+	    }
+	    return listOrdersToDo;
 	}
 
 	 /**
@@ -66,7 +79,7 @@ public class OrderManager {
 		sortedOrders.sort(Comparator.comparing(order -> order.getLoadingTime().plus(order.getExpectedTime())));
 		for (Order order : sortedOrders) {
 			Duration orderTime = order.getLoadingTime().plus(order.getExpectedTime());
-			if (totalTime.plus(orderTime).compareTo(limit) <= 0) {
+			if (totalTime.plus(orderTime).compareTo(limit) <= 0 && !order.isStatusAccepted()) {
 				listOrdersToDo.add(order);
 				totalTime = totalTime.plus(orderTime);
 			} else {

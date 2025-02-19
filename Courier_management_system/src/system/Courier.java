@@ -50,7 +50,6 @@ public class Courier implements Serializable {
 
 		this.id = ID_TEXT + now.format(formatter);
 		this.category = category;
-		//
 		this.workingHours = Duration.ofHours(0);
 		this.penalty = 0;
 		this.blockStatus = 0;
@@ -99,6 +98,7 @@ public class Courier implements Serializable {
 		double totalPenalty = penalty * PENALTY_COST;
 		penalty = 0;
 		double totalBonus = bonusPoints*BONUS_COST;
+		bonusPoints = 0;
 		return hours * SALARY - totalPenalty + totalBonus;
 	}
 
@@ -198,16 +198,28 @@ public class Courier implements Serializable {
 		this.penalty = penalty;
 	}
 
-	public boolean isBlockStatus() {
-		return blockStatus > 0;
-	}
-
 	public boolean isOnlineStatus() {
 		return onlineStatus;
 	}
 
 	public void setOnlineStatus(boolean onlineStatus) {
 		this.onlineStatus = onlineStatus;
+	}
+	
+	public boolean isBlockStatus() {
+		return blockStatus > 0;
+	}
+	
+	public int getBlockStatus() {
+		return blockStatus;
+	}
+
+	public void setBlockStatus(int blockStatus) {
+		this.blockStatus = blockStatus;
+	}
+
+	public static String getDirectoryPath() {
+		return DIRECTORY_PATH;
 	}
 
 	@Override

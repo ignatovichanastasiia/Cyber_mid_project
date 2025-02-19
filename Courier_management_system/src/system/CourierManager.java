@@ -23,15 +23,15 @@ public class CourierManager {
 	// изменение статуса - выход на линию. Разрешение на распределение заказов !!!
 	// CHANGED
 	public static void changeStatusToOnline(String id) {
-			Optional<Courier> courier = getCourierFromID(id);
-			if(courier.isPresent()) {
-				if(!courier.get().isBlockStatus()){
+		Optional<Courier> courier = getCourierFromID(id);
+		if (courier.isPresent()) {
+			if (!courier.get().isBlockStatus()) {
 				courier.get().setOnlineStatus(true);
-				System.out.println("Courier id: "+courier.get().getId()+" online today.");
-				}else {
-					System.out.println("Courier "+ id +" is block");
-				}
+				System.out.println("Courier id: " + courier.get().getId() + " online today.");
+			} else {
+				System.out.println("Courier " + id + " is block");
 			}
+		}
 	}
 
 	public static Optional<Courier> getCourierFromID(String id) {
@@ -39,13 +39,13 @@ public class CourierManager {
 		courierList.forEach(c -> {
 			if (c.getId().equalsIgnoreCase(id)) {
 				courier.of(c);
-			}else {
-			System.out.println("Courier with id: " + id + " not found");
+			} else {
+				System.out.println("Courier with id: " + id + " not found");
 			}
 		});
 		return courier;
 	}
-	
+
 	public static ArrayList getCourierListOfOrdersById(String ID) {
 		return courierOrders.get(ID);
 	}
@@ -79,8 +79,6 @@ public class CourierManager {
 		});
 		return normal;
 	}
-	
-//	public static ArrayList() 
 
 	//  serializeCouriers() – сериализация всех курьеров.
 	public static void serializeCouriers() {

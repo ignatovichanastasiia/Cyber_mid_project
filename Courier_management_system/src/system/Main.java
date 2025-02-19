@@ -1,9 +1,13 @@
 package system;
 
+import java.io.File;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
+	private static final Object NULL = null;
 	private static Scanner sc;
 	private static int enterNum;
 
@@ -155,7 +159,7 @@ public class Main {
 		}
 	}
 
-	//TODO
+	// TODO
 	private static void menuAdmin() {
 		System.out.println("""
 				This is admin's menu!\n
@@ -174,23 +178,43 @@ public class Main {
 		}
 		switch (enterNum) {
 		case 1:
+			System.out.println(CourierManager.getCourierList().toString());
+			System.out.println("\nEnter courier's ID: ");
+			String clientID = sc.nextLine().trim();
+			Optional<Courier> clientCourier = CourierManager.getCourierFromID(clientID);
+			if (clientCourier.isPresent()) {
+				changeCourierParam(clientCourier.get());
+			}
 			break;
 		case 2:
+			System.out.println(Order.getOrders().toString());
+			System.out.println("\nEnter order's ID: ");
+			clientID = sc.nextLine().trim();
+			Order order = Order.findOrderById(clientID);
+			if (order.equals(NULL)) {
+				System.out.println("This order is null.");
+				break;
+			}
+			changeOrderParam(order);
 			break;
 		case 3:
+			System.out.println(CourierManager.getCourierList().toString());
 			break;
 		case 4:
+			System.out.println(Order.getOrders().toString());
 			break;
 		case 5:
+			bufOrdersAndCouriers();
 			break;
 		case 6:
+			deleteAllCouriers();
 			break;
 		case 7:
+			deleteAllOrders();
 			break;
 		case 0:
 			break;
 		default:
-			
 			System.out.println("""
 					Wrong number. Enter only numbers from the menues. Try again!
 					""");
@@ -233,6 +257,161 @@ public class Main {
 	private static boolean takeAnswer() {
 		String answer = sc.nextLine().trim();
 		return answer.equalsIgnoreCase("Y");
+	}
+
+	private static void changeCourierParam(Courier courier) {
+		System.out.println("""
+				Enter number of changed parameter:
+						\tcategory - enter 1,
+						\tworkingHours - enter 2,
+						\tpenalty - enter 3,
+						\tblockStatus - enter 4,
+						\tonlineStatus - enter 5.
+						""");
+		enterNum = takeNum();
+		System.out.println("Enter new value: ");
+		String value = sc.nextLine();
+		try {
+			switch (enterNum) {
+			case 1:
+				courier.setCategory(value);
+				break;
+			case 2:
+				Duration workingHours = Duration.ofHours(Long.parseLong(value.trim()));
+				courier.setWorkingHours(workingHours);
+				System.out.println("Woking hours was changed: " + courier.toString());
+				break;
+			case 3:
+				int pen = Integer.parseInt(value.trim());
+				courier.setPenalty(pen);
+				System.out.println("Penalty was changed: " + courier.toString());
+				break;
+			case 4:
+				int bStatus = Integer.parseInt(value.trim());
+				courier.setBlockStatus(bStatus);
+				System.out.println("Block status was changed: " + courier.toString());
+				break;
+			case 5:
+				boolean isOnline = Boolean.valueOf(value);
+				courier.setOnlineStatus(isOnline);
+				System.out.println("Online status was changed: " + courier.toString());
+				break;
+			}
+
+		} catch (Exception e) {
+			System.out.println("Cast problem: " + e.getMessage());
+		}
+	}
+
+	private static void changeOrderParam(Order order) {
+		System.out.println("""
+				Enter number of changed parameter:
+						\tcategory - enter 1,
+						\tloadingTime - enter 2,
+						\ttravelTime - enter 3,
+						\tpriority - enter 4,
+						\tstatusComplete - enter 5,
+						\tstatusAccepted - enter 6.
+						""");
+
+		enterNum = takeNum();
+		System.out.println("Enter new value: ");
+		String value = sc.nextLine();
+		try {
+			switch (enterNum) {
+			case 1:
+				order.setCategory(value);
+				break;
+			case 2:
+				Duration loadingTime = Duration.ofHours(Long.parseLong(value.trim()));
+				order.setLoadingTime(loadingTime);
+				System.out.println("Loading time was changed: " + order.toString());
+				break;
+			case 3:
+				Duration travelTime = Duration.ofHours(Long.parseLong(value.trim()));
+				order.setExpectedTime(travelTime);
+//				TODO
+//				order.setTravelTime(travelTime);
+				System.out.println("Travel time was changed: " + order.toString());
+				break;
+			case 4:
+				boolean priority = Boolean.valueOf(value.trim());
+				order.setPriority(priority);
+				System.out.println("Priority was changed: " + order.toString());
+				break;
+			case 5:
+				boolean statusComplete = Boolean.valueOf(value);
+				order.setStatusComplete(statusComplete);
+				System.out.println("Status complete was changed: " + order.toString());
+				break;
+			case 6:
+				boolean statusAccepted = Boolean.valueOf(value);
+				order.setStatusAccepted(statusAccepted);
+				System.out.println("Status accepted was changed: " + order.toString());
+				break;
+			}
+
+		} catch (Exception e) {
+			System.out.println("Cast problem: " + e.getMessage());
+		}
+	}
+
+	private static void bufOrdersAndCouriers() {
+//		10 couriers
+		for(int x = 0; x<=10;x++) {
+			int random = 1+(int)((Math.random() * 3));
+			Courier courier = new Courier(takeCategory(random));
+		}
+//		100 orders
+		for(int y = 0;y<=100;y++) {
+			int chooseCategory = 1+(int)((Math.random() * 3));
+			long loadingTime = 1+(long)((Math.random() * 20));
+			Duration lTime = Duration.ofMinutes(loadingTime);
+			long travelTime = 1+(long)((Math.random() * 240));
+			Duration tTime = Duration.ofMinutes(travelTime);
+			Order order = new Order(takeCategory(chooseCategory),lTime,tTime);
+		}
+
+	}
+
+	public static void deleteAllCouriers() {
+		File directory = new File(Courier.getDirectoryPath());
+		// Delete the file or directory
+		if (directory.exists()) {
+			if (directory.isDirectory()) {
+				File[] files = directory.listFiles();
+				if (files != null) {
+					for (File file : files) {
+						if (!file.isDirectory()) {
+							// Delete individual files
+							file.delete();
+						}
+					}
+				}
+			}
+		}
+		ArrayList<Courier> courierList = new ArrayList<Courier>();
+	}
+
+	//TODO
+	private static void deleteAllOrders() {
+//		File directory = new File(Order.getBasePath(),Order.getOrders();
+		File directory = new File("orders");
+		// Delete the file or directory
+		if (directory.exists()) {
+			if (directory.isDirectory()) {
+				File[] files = directory.listFiles();
+				if (files != null) {
+					for (File file : files) {
+						if (!file.isDirectory()) {
+							// Delete individual files
+							file.delete();
+						}
+					}
+				}
+			}
+		}
+		Order.setOrders(new ArrayList<Order>());
 	}
 }
 
