@@ -497,6 +497,10 @@ public class Main {
 
 	}
 
+	/**
+	 * The method allows the administrator to erase all data about 
+	 * couriers (both in the list and serialized files in the folder)
+	 */
 	public static void deleteAllCouriers() {
 		File directory = new File("couriers");
 		// Delete the file or directory
@@ -516,7 +520,11 @@ public class Main {
 		CourierManager.setCourierList(new ArrayList<Courier>());
 	}
 
-	// TODO
+	/**
+	 * The method allows the administrator to erase all data about orders 
+	 * (both in the list and serialized files in the folder)
+	 * 
+	 */
 	private static void deleteAllOrders() {
 		File directory = new File("orders");
 		// Delete the file or directory

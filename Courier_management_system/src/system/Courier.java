@@ -33,6 +33,7 @@ public class Courier implements Serializable {
 	private int blockStatus;
 	private boolean onlineStatus;
 	private int bonusPoints;
+	private ArrayList<Order> listOrders;
 
 	/**
 	 * The constructor takes the transportation category as an attribute. All other
@@ -42,13 +43,13 @@ public class Courier implements Serializable {
 	 * the CourierManager class.
 	 */
 	public Courier(String category) {
-
 		this.id = genID();
 		this.category = category;
 		this.workingHours = Duration.ofHours(0);
 		this.penalty = 0;
 		this.blockStatus = 0;
 		this.onlineStatus = false;
+		this.listOrders = new ArrayList<Order>();
 
 		ArrayList<Courier> couriers = new ArrayList<Courier>(CourierManager.getCourierList());
 		couriers.add(this);
@@ -188,6 +189,14 @@ public class Courier implements Serializable {
 
 	public void setBlockStatus(int blockStatus) {
 		this.blockStatus = blockStatus;
+	}
+
+	public ArrayList<Order> getListOrders() {
+		return listOrders;
+	}
+
+	public void setListOrders(ArrayList<Order> listOrders) {
+		this.listOrders = listOrders;
 	}
 
 	@Override

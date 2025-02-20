@@ -2,16 +2,15 @@ package system;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 
 public class CourierManager {
 	private static final int MAX_WORK_HOURS = 11;
 	private static final int NORMAL_WORK_HOURS = 8;
+	private static final ArrayList NULL = null;
 	private static ArrayList<Courier> courierList = new ArrayList<Courier>();
-	private static Map<String, ArrayList<Order>> courierOrders = new HashMap();
+//	private static Map<String, ArrayList<Order>> courierOrders = new HashMap();
 	private static boolean normal;
 	private static boolean done;
 	public static Scanner sc;
@@ -66,12 +65,17 @@ public class CourierManager {
 	}
 
 	/**
-	 * The method accesses the card and by ID, which is the key, returns a list with orders
+	 * The method accesses the List orders by ID
 	 * @param ID
 	 * @return ArrayList <Order>
 	 */
-	public static ArrayList getCourierListOfOrdersById(String ID) {
-		return courierOrders.get(ID);
+	public static ArrayList<Order> getCourierListOfOrdersById(String ID) {
+		Optional c = getCourierFromID(ID);
+		if(c.isPresent()) {
+			Courier courier = (Courier)c.get();
+			return courier.getListOrders();
+		}
+		return new ArrayList<Order>();
 	}
 
 	/**
@@ -93,7 +97,7 @@ public class CourierManager {
 				});
 				System.out.println("\nAssign all this orders? Y (for yes)/ANY KEY\n");
 				if (takeAnswer()) {
-					courierOrders.put(c.getId(), orders);
+					c.setListOrders(orders);
 					return;
 				} else {
 					orders.forEach(o -> {
@@ -104,7 +108,7 @@ public class CourierManager {
 							o.setStatusAccepted(false);
 						}
 					});
-					courierOrders.put(c.getId(), newOne);
+					c.setListOrders(newOne);
 				}
 			}
 		});
@@ -167,14 +171,15 @@ public class CourierManager {
 	public static void setCourierList(ArrayList<Courier> courierList) {
 		CourierManager.courierList = courierList;
 	}
-
-	public static Map<String, ArrayList<Order>> getCourierOrders() {
-		return courierOrders;
-	}
-
-	public static void setCourierOrders(Map<String, ArrayList<Order>> courierOrders) {
-		CourierManager.courierOrders = courierOrders;
-	}
+//
+//	public static Map<String, ArrayList<Order>> getCourierOrders() {
+//		return courierOrders;
+//	}
+//
+//	public static void setCourierOrders(Map<String, ArrayList<Order>> courierOrders) {
+//		CourierManager.courierOrders = courierOrders;
+//	}
+//	
 
 }
 
