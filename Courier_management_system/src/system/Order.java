@@ -94,10 +94,10 @@ public class Order implements Serializable {
 			serFile.createNewFile();
 			System.out.println("Created file for serialization.");
 			fileOrdersOut.writeObject(orders);
-			System.out.println("Courier was serialized into file: " + serFile.getPath());
+			System.out.println("Orders were serialized into file: " + serFile.getPath());
 			return true;
 		} catch (IOException e) {
-			System.err.println("We have some problem with saving courier files: " + e.getMessage());
+			System.err.println("We have some problem with saving orders files: " + e.getMessage());
 			return false;
 		}
 	}
