@@ -80,10 +80,8 @@ public class Report implements Serializable {
 		for (Order order : Order.getOrders()) {
 			if (!order.isStatusAccepted()) {
 				uncompletedOrders.add(order);
-				str.append("Order " + order.getId() + " added to list of uncompleted tasks");
 			} else {
 				completedOrders.add(order);
-				str.append("Order " + order.getId() + " added to list of completed tasks");
 			}
 		}
 		System.out.println(str);
