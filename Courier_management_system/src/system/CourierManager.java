@@ -61,7 +61,7 @@ public class CourierManager {
 		ArrayList<Order> newOne = new ArrayList<Order>();
 		courierList.forEach(c -> {
 			if (c.getId().equalsIgnoreCase(id)) {
-				System.out.println("\nCourier " + id + " assign orders:/n");
+				System.out.println("\nCourier " + id + " assign orders:\n");
 				orders.forEach(o -> {
 					System.out.println("Order " + o.getId() + ": category=" + o.getCategory()
 							+ ", loading time=" + o.getLoadingTime().toMinutes() + ", travelTime="
@@ -112,7 +112,7 @@ public class CourierManager {
 
 	//  serializeCouriers() – сериализация всех курьеров.
 	public static void serializeCouriers() {
-		Courier.deserializeCouriers();
+		Courier.serializeCouriers();
 	}
 
 	//  deserializeCouriers() – десериализация курьеров.

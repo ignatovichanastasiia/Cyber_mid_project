@@ -34,7 +34,7 @@ public class Courier implements Serializable {
 	private boolean onlineStatus;
 	private int bonusPoints;
 
-	/*
+	/**
 	 * The constructor takes the transportation category as an attribute. All other
 	 * attributes are generated during the object creation process. Part of the id
 	 * is the date and time the courier was registered. Also, inside the
@@ -62,7 +62,7 @@ public class Courier implements Serializable {
 	}
 
 
-	/*
+	/**
 	 * Confirmation of order acceptance. The method takes a list of distributed
 	 * orders and returns a list of accepted orders.
 	 * 
@@ -87,8 +87,10 @@ public class Courier implements Serializable {
 
 	}
 
-	/*
-	 * Salary calculation taking into account fines and bonuses. (RUS)Расчет
+	/**
+	 * Salary calculation taking into account fines and bonuses. 
+	 * 
+	 * (RUS)Расчет
 	 * зарплаты с учетом штрафов и премий.
 	 * 
 	 */
@@ -102,7 +104,7 @@ public class Courier implements Serializable {
 		return hours * SALARY - totalPenalty + totalBonus;
 	}
 
-	/*
+	/**
 	 * Adds penalty.
 	 * 
 	 * (RUS)Добавляет единицу штрафа.
@@ -112,7 +114,7 @@ public class Courier implements Serializable {
 		return ++penalty;
 	}
 
-	/*
+	/**
 	 * Blocks the courier for 2 days due to exceeding the working hours limit.
 	 * 
 	 * (RUS)Блокирует курьера на 2 дня из-за превышения лимита рабочих часов.
@@ -128,6 +130,7 @@ public class Courier implements Serializable {
 	/**
 	 * Serializes the static courier list to a specified file.
 	 *
+	 *(RUS) Сериализует курьеров в файл.
 	 */
 	public static boolean serializeCouriers() {
 		File directoryForSerialization = new File(DIRECTORY_PATH);
@@ -157,6 +160,8 @@ public class Courier implements Serializable {
 	 * Deserializes the couriers list from a specified file.
 	 *
 	 * @return deserialized list of couriers
+	 * 
+	 * (RUS) Дсеериализует курьеров из файла.
 	 */
 	public static ArrayList<Courier> deserializeCouriers() {
 		File userFile = new File(DIRECTORY_PATH, "couriers.ser");

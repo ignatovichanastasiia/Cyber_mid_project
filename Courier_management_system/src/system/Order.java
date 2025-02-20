@@ -1,3 +1,4 @@
+
 package system;
 
 import java.io.File;
@@ -86,23 +87,17 @@ public class Order implements Serializable {
 	public static boolean serializeOrders() throws IOException {
 		File directoryForSerialization = new File(DIRECTORY_PATH);
 		File serFile = new File(DIRECTORY_PATH, ORDERS + ".ser");
-		if (!directoryForSerialization.exists()) {
-			directoryForSerialization.mkdir();
-		}
-		if(!serFile.exists()) {
-			try {
+		try (ObjectOutputStream fileOrdersOut = new ObjectOutputStream(new FileOutputStream(serFile))) {
+			if (!directoryForSerialization.exists()) {
+				directoryForSerialization.mkdir();
+			}
 			serFile.createNewFile();
 			System.out.println("Created file for serialization.");
-			}catch(IOException e) {
-				System.out.println("Problem with creating file for serialization"+e.getMessage());
-			}
-		}
-		try (ObjectOutputStream fileOrdersOut = new ObjectOutputStream(new FileOutputStream(serFile))) {
 			fileOrdersOut.writeObject(orders);
-			System.out.println("Courier was serialized into file: " + serFile.getPath());
+			System.out.println("Orders were serialized into file: " + serFile.getPath());
 			return true;
 		} catch (IOException e) {
-			System.out.println("We have some problem with saving courier files: " + e.getMessage());
+			System.err.println("We have some problem with saving orders files: " + e.getMessage());
 			return false;
 		}
 	}
@@ -119,6 +114,7 @@ public class Order implements Serializable {
 		if (userFile.exists()) {
 			try (ObjectInputStream fileOrders = new ObjectInputStream(new FileInputStream(userFile))) {
 				orders = (ArrayList<Order>) fileOrders.readObject();
+				System.out.println("Orders were successfully uploaded");
 			} catch (IOException | ClassNotFoundException e) {
 				System.err.println("Error while finding an order: " + e.getMessage());
 			}
