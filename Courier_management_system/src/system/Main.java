@@ -363,11 +363,19 @@ public class Main {
 		return num;
 	}
 
+	/**
+	 * Utility method to get boolean from client input
+	 * @return boolean - client's answer
+	 */
 	private static boolean takeAnswer() {
 		String answer = sc.nextLine().trim();
 		return answer.equalsIgnoreCase("Y");
 	}
 
+	/**
+	 * The method allows the administrator to change the courier data by entering data into the console.
+	 * @param courier
+	 */
 	private static void changeCourierParam(Courier courier) {
 		System.out.println("""
 				Enter number of changed parameter:
@@ -412,6 +420,10 @@ public class Main {
 		}
 	}
 
+	/**
+	 * The method allows the administrator to change the order data by entering data into the console.
+	 * @param order
+	 */
 	private static void changeOrderParam(Order order) {
 		System.out.println("""
 				Enter number of changed parameter:
@@ -463,6 +475,9 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Method creates 10 couriers and 100 orders for testing program
+	 */
 	private static void bufOrdersAndCouriers() {
 //		10 couriers
 		for (int x = 0; x <= 10; x++) {
@@ -483,7 +498,7 @@ public class Main {
 	}
 
 	public static void deleteAllCouriers() {
-		File directory = new File(Courier.getDirectoryPath());
+		File directory = new File("couriers");
 		// Delete the file or directory
 		if (directory.exists()) {
 			if (directory.isDirectory()) {
@@ -498,12 +513,11 @@ public class Main {
 				}
 			}
 		}
-		ArrayList<Courier> courierList = new ArrayList<Courier>();
+		CourierManager.setCourierList(new ArrayList<Courier>());
 	}
 
 	// TODO
 	private static void deleteAllOrders() {
-//		File directory = new File(Order.getBasePath(),Order.getOrders();
 		File directory = new File("orders");
 		// Delete the file or directory
 		if (directory.exists()) {
@@ -523,6 +537,3 @@ public class Main {
 	}
 }
 
-//	startRegistration() – запуск первого периода (регистрация заказов и курьеров).
-//	startDistribution() – запуск второго периода (распределение заказов).
-//	generateFinalReport() – запуск третьего периода (подведение итогов и создание отчетов).
