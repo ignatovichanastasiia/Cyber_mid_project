@@ -16,15 +16,23 @@ public class CourierManager {
 	private static boolean done;
 	public static Scanner sc;
 
-	// Добавление нового курьера
+	/**
+	 * The method sends the Category parameter to the constructor to create the courier and then returns the created courier.
+	 * 
+	 * @param category
+	 * @return Courier
+	 */
 	public static Courier addCourier(String category) {
 		System.out.println("Creating new Courier.");
 		Courier courier = new Courier(category);
 		return courier;
 	}
 
-	// изменение статуса - выход на линию. Разрешение на распределение заказов !!!
-	// CHANGED
+	/**
+	 * Changing status online - going online. Permission to distribute orders.
+	 * 
+	 * @param id (courier's ID)
+	 */
 	public static void changeStatusToOnline(String id) {
 		Optional<Courier> courier = getCourierFromID(id);
 		if (courier.isPresent()) {
@@ -37,6 +45,12 @@ public class CourierManager {
 		}
 	}
 
+	/**
+	 * The method searches for a courier by ID string. Returns Optional for working with null
+	 * 
+	 * @param id
+	 * @return Optional<Courier>
+	 */
 	public static Optional<Courier> getCourierFromID(String id) {
 		done = false;
 		Optional<Courier> courier = Optional.empty();
@@ -51,11 +65,21 @@ public class CourierManager {
 		return courier;
 	}
 
+	/**
+	 * The method accesses the card and by ID, which is the key, returns a list with orders
+	 * @param ID
+	 * @return ArrayList <Order>
+	 */
 	public static ArrayList getCourierListOfOrdersById(String ID) {
 		return courierOrders.get(ID);
 	}
 
-	// Назначение курьера на заказ.
+	/**
+	 * The method receives a list of distributed orders and offers them to the courier. 
+	 * The courier can accept all or one at a time.
+	 * @param id courier
+	 * @param orders - list orders
+	 */
 	public static void assignCourierToOrder(String id, ArrayList<Order> orders) {
 		sc = new Scanner(System.in);
 		ArrayList<Order> newOne = new ArrayList<Order>();
@@ -67,13 +91,13 @@ public class CourierManager {
 							+ ", loading time=" + o.getLoadingTime().toMinutes() + ", travelTime="
 							+ o.getTravelTime().toMinutes() + ", priority=" + o.isPriority() + "\n");
 				});
-				System.out.println("\nAssign all this orders? Y/N\n");
+				System.out.println("\nAssign all this orders? Y (for yes)/ANY KEY\n");
 				if (takeAnswer()) {
 					courierOrders.put(c.getId(), orders);
 					return;
 				} else {
 					orders.forEach(o -> {
-						System.out.println("Order " + o.getId() + "\nAssign this order? Y/N");
+						System.out.println("Order " + o.getId() + "\nAssign this order? Y (for yes)/ANY KEY\n");
 						if (takeAnswer()) {
 							newOne.add(o);
 						} else {
@@ -86,8 +110,11 @@ public class CourierManager {
 		});
 	}
 
-	//  checkWorkTime() – проверка времени работы курьера.
-	// ДЛЯ ИТОГОВЫХ ПОДСЧЕТОВ
+	/**
+	 * The method checks the courier's working hours and answers whether the limit has been exceeded or not.
+	 * @param id
+	 * @return boolean (true - more than limit)
+	 */
 	public static boolean checkWorkTime(String id) {
 		normal = true;
 		courierList.forEach(c -> {
@@ -105,21 +132,34 @@ public class CourierManager {
 		return normal;
 	}
 
+	/**
+	 * Utility method for working with client input
+	 * @return boolean - as client answer
+	 */
 	private static boolean takeAnswer() {
 		String answer = sc.nextLine().trim();
 		return answer.equalsIgnoreCase("Y");
 	}
-
-	//  serializeCouriers() – сериализация всех курьеров.
+	
+	/**
+	 * Passing method from logic (main) to class
+	 */
 	public static void serializeCouriers() {
 		Courier.serializeCouriers();
 	}
 
-	//  deserializeCouriers() – десериализация курьеров.
+
+	/**
+	 * Passing method from logic (main) to class
+	 */
 	public static void deserializeCouriers() {
 		Courier.deserializeCouriers();
 	}
 
+	/**
+	 * Getters and Setters
+	 * 
+	 */
 	public static ArrayList<Courier> getCourierList() {
 		return courierList;
 	}
@@ -137,13 +177,4 @@ public class CourierManager {
 	}
 
 }
-//order.isAssepted() - false;
 
-//o	Атрибуты: 
-//	courierList (список курьеров)
-//o	Методы: 
-//	addCourier() – добавление нового курьера.
-//	assignCourierToOrder() – назначение курьера на заказ.
-//	checkWorkTime() – проверка времени работы курьера.
-//	serializeCouriers() – сериализация всех курьеров.
-//	deserializeCouriers() – десериализация курьеров.

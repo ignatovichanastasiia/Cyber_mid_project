@@ -3,6 +3,7 @@ package system;
 import java.io.File;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -12,7 +13,7 @@ public class Main {
 	private static int enterNum;
 	private static boolean done;
 
-	/*
+	/**
 	 * The main method contains the primary methods that control the activation of
 	 * different stages of the program's operation. The main stages are: 1.
 	 * registration of couriers and orders; 2. assignment of orders to available
@@ -33,7 +34,7 @@ public class Main {
 
 	}
 
-	/*
+	/**
 	 * The method starts the first stage of the program's operation – registration.
 	 * Logically, the first step is the deserialization of already existing objects:
 	 * these are the couriers in the database and the orders that are already in the
@@ -63,7 +64,7 @@ public class Main {
 					}
 				});
 				if (done) {
-					System.out.println("Start distribution for this day? Y/N");
+					System.out.println("Start distribution for this day? Y (for yes)/ANY KEY");
 					if (takeAnswer()) {
 						return;
 					}
@@ -73,7 +74,7 @@ public class Main {
 		}
 	}
 
-	/*
+	/**
 	 * This method triggers the order distribution process from the database to the
 	 * couriers available in the database and currently in online status. Couriers
 	 * who receive orders must sequentially confirm their workload.
@@ -86,7 +87,7 @@ public class Main {
 		OrderManager.distributeOrders();
 	}
 
-	/*
+	/**
 	 * This method starts the third stage of the program's operation: summarizing
 	 * the results and generating reports.
 	 * 
@@ -104,6 +105,10 @@ public class Main {
 		System.out.println("This day is over.");
 	}
 
+	/**
+	 * First logis step.
+	 * Actually restoring couriers and orders from the file.
+	 */
 	private static void deserializationForStart() {
 		try {
 			CourierManager.deserializeCouriers();
@@ -113,6 +118,9 @@ public class Main {
 		}
 	}
 
+	/**
+	 * The first part of the customer's interaction with the menu
+	 */
 	private static void RegistrationFirstStep() {
 		do {
 			System.out.println("""
@@ -126,7 +134,11 @@ public class Main {
 			RegistrationSecondStep(enterNum);
 		} while (enterNum != 0);
 	}
-
+	
+	/**
+	 * The second part of the customer's interaction with the menu.
+	 * Scattering of the menu after entering data about the client’s role.
+	 */
 	private static void RegistrationSecondStep(int role) {
 		if (role == 0) {
 			System.out.println("\n");
@@ -150,7 +162,10 @@ public class Main {
 		}
 
 	}
-
+	
+	/**
+	 * Menu for couriers. Registration, access to the line (online status).
+	 */
 	private static void menuCourier() {
 		System.out.println("""
 				This is menu for couriers!\n
@@ -177,7 +192,7 @@ public class Main {
 				break;
 			}
 			Courier courier = CourierManager.addCourier(takeCategory(enterNum));
-			System.out.println("ID of new courier: " + courier.getId() + "\nTake orders for this day?Y/N");
+			System.out.println("ID of new courier: " + courier.getId() + "\nTake orders for this day?Y (for yes)/ANY KEY");
 			if (takeAnswer()) {
 				CourierManager.changeStatusToOnline(courier.getId());
 			}
@@ -198,7 +213,15 @@ public class Main {
 		}
 	}
 
-//	public Order(String category, Duration loadingTime, Duration travelTime)
+	/**
+	 * Takes parameters for creating an order from client input
+	 * (Order(String category, Duration loadingTime, Duration travelTime)).
+	 * 
+	 * @param category
+	 * @param loadingTime
+	 * @param travelTime
+	 */
+
 	private static void menuOrders() {
 		System.out.println("""
 				This is menu for orders!\n
@@ -222,13 +245,17 @@ public class Main {
 		Duration travelTime = Duration.ofMinutes(minutes);
 		Order order = new Order(category, loadingTime, travelTime);
 		System.out.println("Order was created: " + order.getId());
-		System.out.println("Do you want to create one more order?Y/N");
+		System.out.println("Do you want to create one more order?Y (for yes)/ANY KEY");
 		if (takeAnswer()) {
 			menuOrders();
 		}
 	}
 
-	// TODO
+	/**
+	 * The administrator menu allows you to obtain and manage all data. 
+	 * It is also possible to create random couriers and random orders for the program to work in test mode.
+	 * 
+	 */
 	private static void menuAdmin() {
 		System.out.println("""
 				This is admin's menu!\n
@@ -291,6 +318,12 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Utility method to get the Category parameter from client input
+	 * 
+	 * @param intCategory
+	 * @return String - Category
+	 */
 	private static String takeCategory(int intCategory) {
 		String strCategory = "null";
 		switch (intCategory) {
@@ -311,12 +344,19 @@ public class Main {
 		return strCategory;
 	}
 
+	/**
+	 * Utility method to get number
+	 * @return number (int)
+	 */
 	private static int takeNum() {
 		int num = 0;
 		try {
 			num = sc.nextInt();
 			sc.nextLine();
 		} catch (NumberFormatException e) {
+			System.out.println("Wrong enter");
+			num = 0;
+		}catch(InputMismatchException e) {
 			System.out.println("Wrong enter");
 			num = 0;
 		}
