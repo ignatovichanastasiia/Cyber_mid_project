@@ -169,6 +169,19 @@ public class Report implements Serializable {
 	}
 
 	/**
+	 * Converts a given Duration object into a readable string format, specifically
+	 * expressing the duration in terms of hours and minutes.
+	 *
+	 * @param duration the Duration object representing the time span to be formatted
+	 * @return a string representation of the duration in the format "x hours y minutes"
+	 */
+	private static String formatDuration(Duration duration) {
+	    long hours = duration.toHours();
+	    long minutes = duration.toMinutes() % 60;
+	    return hours + " hours " + minutes + " minutes";
+	}
+
+	/**
 	 * Deserializes the reports ArrayList from a specified file.
 	 * 
 	 * This method checks if the file exists and then reads the reports ArrayList
