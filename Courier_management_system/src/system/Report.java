@@ -20,7 +20,7 @@ public class Report implements Serializable {
 	private static ArrayList<Report> reports = new ArrayList<Report>();
 	private static ArrayList<Order> uncompletedOrders = new ArrayList<Order>();
 	private static ArrayList<Order> completedOrders = new ArrayList<Order>();
-	private static ArrayList<Courier> couriers;
+	private static ArrayList<Courier> couriers = CourierManager.getCourierList();
 
 	/**
 	 * Constructor for creating a Report object.
@@ -29,10 +29,10 @@ public class Report implements Serializable {
 	 * @param completedOrders   - List of completed orders
 	 * @param couriers          - List of couriers
 	 */
-	public Report(ArrayList<Order> uncompletedOrders, ArrayList<Order> completedOrders, ArrayList<Courier> couriers) {
+	public Report() {
 		this.uncompletedOrders = uncompletedOrders;
 		this.completedOrders = completedOrders;
-		this.couriers = CourierManager.getCourierList();
+		this.couriers = couriers;
 		this.workingTimeForOrders = calculateWorkingTimeOrder();
 		sortingOrdersByReadyStatus();
 		reports.add(this);
