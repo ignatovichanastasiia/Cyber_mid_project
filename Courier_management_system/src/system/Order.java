@@ -114,6 +114,7 @@ public class Order implements Serializable {
 		if (userFile.exists()) {
 			try (ObjectInputStream fileOrders = new ObjectInputStream(new FileInputStream(userFile))) {
 				orders = (ArrayList<Order>) fileOrders.readObject();
+				System.out.println("Orders were successfully uploaded");
 			} catch (IOException | ClassNotFoundException e) {
 				System.err.println("Error while finding an order: " + e.getMessage());
 			}
