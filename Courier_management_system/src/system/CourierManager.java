@@ -61,18 +61,29 @@ public class CourierManager {
 		ArrayList<Order> newOne = new ArrayList<Order>();
 		courierList.forEach(c -> {
 			if (c.getId().equalsIgnoreCase(id)) {
-				System.out.println("Courier "+id+ " assign orders: ");
+				System.out.println("\nCourier " + id + " assign orders:/n");
 				orders.forEach(o -> {
-					System.out.println(o.toString()+"\nAssign this order? Y/N");
-					if(takeAnswer()) {
-						newOne.add(o);
-					}else {
-						o.setStatusAccepted(false);
-					}
+					System.out.println("Order " + o.getId() + ": category=" + o.getCategory()
+							+ ", loading time=" + o.getLoadingTime().toMinutes() + ", travelTime="
+							+ o.getTravelTime().toMinutes() + ", priority=" + o.isPriority() + "\n");
 				});
-				courierOrders.put(c.getId(), newOne);
+				System.out.println("\nAssign all this orders? Y/N\n");
+				if (takeAnswer()) {
+					courierOrders.put(c.getId(), orders);
+					return;
+				} else {
+					orders.forEach(o -> {
+						System.out.println("Order " + o.getId() + "\nAssign this order? Y/N");
+						if (takeAnswer()) {
+							newOne.add(o);
+						} else {
+							o.setStatusAccepted(false);
+						}
+					});
+					courierOrders.put(c.getId(), newOne);
+				}
 			}
-		});		
+		});
 	}
 
 	//  checkWorkTime() – проверка времени работы курьера.
@@ -93,7 +104,6 @@ public class CourierManager {
 		});
 		return normal;
 	}
-	
 
 	private static boolean takeAnswer() {
 		String answer = sc.nextLine().trim();
@@ -102,16 +112,12 @@ public class CourierManager {
 
 	//  serializeCouriers() – сериализация всех курьеров.
 	public static void serializeCouriers() {
-		courierList.forEach(c -> {
-			c.serialize();
-		});
+		Courier.deserializeCouriers();
 	}
 
 	//  deserializeCouriers() – десериализация курьеров.
 	public static void deserializeCouriers() {
-		courierList.forEach(c -> {
-			c.deserialize();
-		});
+		Courier.deserializeCouriers();
 	}
 
 	public static ArrayList<Courier> getCourierList() {

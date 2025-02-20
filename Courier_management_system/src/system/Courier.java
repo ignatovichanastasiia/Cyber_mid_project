@@ -23,6 +23,7 @@ public class Courier implements Serializable {
 	private static final double PENALTY_COST = 250;
 	private static final double BONUS_COST = 500;
 	private static int counter = 0;
+	
 
 	private static Scanner sc = new Scanner(System.in);
 	private String id;
@@ -47,8 +48,6 @@ public class Courier implements Serializable {
 	 * 
 	 */
 	public Courier(String category) {
-
-
 
 		this.id = genID();
 		this.category = category;
@@ -124,17 +123,15 @@ public class Courier implements Serializable {
 					"Logic error: a blocked courier took over or the wrong courier received the block.");
 		}
 		blockStatus = 2;
-	}
-
-	/*
-	 * Serialization of courier data.
-	 * 
-	 * (RUS)Сериализация данных курьера.
-	 * 
+	}	
+	
+	/**
+	 * Serializes the static courier list to a specified file.
+	 *
 	 */
-	public boolean serialize() {
+	public static boolean serializeCouriers() {
 		File directoryForSerialization = new File(DIRECTORY_PATH);
-		File serFile = new File(DIRECTORY_PATH, id + ".ser");
+		File serFile = new File(DIRECTORY_PATH, "couriers.ser");
 		if (!directoryForSerialization.exists()) {
 			directoryForSerialization.mkdir();
 		}
@@ -146,8 +143,8 @@ public class Courier implements Serializable {
 				System.out.println("Problem with creating file for serialization: "+e.getMessage());
 			}
 		}
-		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(serFile))) {
-			out.writeObject(this);
+		try (ObjectOutputStream fileCouriersOut = new ObjectOutputStream(new FileOutputStream(serFile))) {
+			fileCouriersOut.writeObject(CourierManager.getCourierList());
 			System.out.println("Courier was serialized into file: " + serFile.getPath());
 			return true;
 		} catch (IOException e) {
@@ -156,30 +153,81 @@ public class Courier implements Serializable {
 		}
 	}
 
-	/*
-	 * Deserialization of courier data from a file.
-	 * 
-	 * (RUS)Десериализация данных курьера из файла.
-	 * 
+	/**
+	 * Deserializes the couriers list from a specified file.
+	 *
+	 * @return deserialized list of couriers
 	 */
-	public boolean deserialize() {
-		File serFile = new File(DIRECTORY_PATH, id + ".ser");
-		if (serFile.exists()) {
-			try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(serFile.getPath()))) {
-				Courier deserializedEntry = (Courier) in.readObject();
-				if (blockStatus > 0) {
-					this.blockStatus = --blockStatus;
-				}
-				System.out.println("Courier was deserialized: " + deserializedEntry.id);
-				System.out.println(deserializedEntry.toString());
-				return true;
+	public static ArrayList<Courier> deserializeCouriers() {
+		File userFile = new File(DIRECTORY_PATH, "couriers.ser");
+		ArrayList<Courier> couriers = new ArrayList<Courier>();
+		if (userFile.exists()) {
+			try (ObjectInputStream fileCourier = new ObjectInputStream(new FileInputStream(userFile))) {
+				 couriers = (ArrayList<Courier>) fileCourier.readObject();
+				 CourierManager.setCourierList(couriers);
 			} catch (IOException | ClassNotFoundException e) {
-				System.out.println("We have troble with deserialization: " + e.getMessage());
-				return false;
+				System.err.println("Error while finding an order: " + e.getMessage());
 			}
 		}
-		return false;		
+		return couriers;
 	}
+	
+	
+	
+//	/*
+//	 * Serialization of courier data.
+//	 * 
+//	 * (RUS)Сериализация данных курьера.
+//	 * 
+//	 */
+//	public boolean serialize() {
+//		File directoryForSerialization = new File(DIRECTORY_PATH);
+//		File serFile = new File(DIRECTORY_PATH, id + ".ser");
+//		if (!directoryForSerialization.exists()) {
+//			directoryForSerialization.mkdir();
+//		}
+//		if(!serFile.exists()) {
+//			try {
+//			serFile.createNewFile();
+//			System.out.println("Created file for serialization.");
+//			}catch(IOException e) {
+//				System.out.println("Problem with creating file for serialization: "+e.getMessage());
+//			}
+//		}
+//		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(serFile))) {
+//			out.writeObject(this);
+//			System.out.println("Courier was serialized into file: " + serFile.getPath());
+//			return true;
+//		} catch (IOException e) {
+//			System.out.println("We have some problem with saving courier files: " + e.getMessage());
+//			return false;
+//		}
+//	}
+//
+//	/*
+//	 * Deserialization of courier data from a file.
+//	 * 
+//	 * (RUS)Десериализация данных курьера из файла.
+//	 * 
+//	 */
+//	public boolean deserialize() {
+//		File serFile = new File(DIRECTORY_PATH, id + ".ser");
+//		if (serFile.exists()) {
+//			try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(serFile))) {
+//				Courier deserializedEntry = (Courier) in.readObject();
+//				if (blockStatus > 0) {
+//					this.blockStatus = --blockStatus;
+//				}
+//				System.out.println("Courier was deserialized: " + deserializedEntry.id);
+//				System.out.println(deserializedEntry.toString());
+//				return true;
+//			} catch (IOException | ClassNotFoundException e) {
+//				System.out.println("We have troble with deserialization: " + e.getMessage());
+//				return false;
+//			}
+//		}
+//		return false;		
+//	}
 
 	public String getId() {
 		return id;
