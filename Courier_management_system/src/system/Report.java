@@ -101,28 +101,28 @@ public class Report implements Serializable {
 		try {
 			// Ensure that necessary collections and variables are not null
 			if (workingTimeForOrders != null) {
-				report.append("Total working time for completed orders: ").append(workingTimeForOrders).append("\n\n");
-				
+				report.append("Total working time for completed orders: ").append(formatDuration(workingTimeForOrders)).append("\n\n");
+
 			} else {
 				System.out.println("No order was delivered this day");
 			}
 
 			if (completedOrders != null) {
 				report.append("Total number of completed orders: ").append(completedOrders.size()).append("\n");
-				
+
 			} else {
 				System.out.println("There's no completed orders for today");
 			}
 
 			if (uncompletedOrders != null) {
 				report.append("Total number of uncompleted orders: ").append(uncompletedOrders.size()).append("\n\n");
-			
+
 			} else {
 				System.out.println("There's no uncompleted orders left");
 			}
 
 			// Total delay time for completed orders
-			report.append("Total delay time for all completed orders: ").append(calculateDelaysOrder()).append("\n\n");
+			report.append("Total delay time for all completed orders: ").append(formatDuration(calculateDelaysOrder())).append("\n\n");
 
 			// Breakdown by couriers and orders
 			if (couriers != null) {
@@ -131,7 +131,7 @@ public class Report implements Serializable {
 					report.append("Total Earnings: ").append(courier.calculateSalary()).append("\n");
 					report.append("Total Orders Completed: ")
 							.append(CourierManager.getCourierListOfOrdersById(courier.getId()).size()).append("\n");
-					report.append("Total Working Hours: ").append(courier.getWorkingHours()).append("\n");
+					report.append("Total Working Hours: ").append(formatDuration(courier.getWorkingHours())).append("\n");
 				}
 			}
 
