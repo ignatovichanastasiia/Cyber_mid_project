@@ -11,6 +11,7 @@ public class CourierManager {
 	private static final ArrayList NULL = null;
 	private static ArrayList<Courier> courierList = new ArrayList<Courier>();
 //	private static Map<String, ArrayList<Order>> courierOrders = new HashMap();
+	private static Duration wh = Duration.ZERO;
 	private static boolean normal;
 	private static boolean done;
 	public static Scanner sc;
@@ -98,16 +99,22 @@ public class CourierManager {
 				System.out.println("\nAssign all this orders? Y (for yes)/ANY KEY\n");
 				if (takeAnswer()) {
 					c.setListOrders(orders);
+					orders.forEach(o -> {
+						wh = wh.plus(o.getLoadingTime()).plus(o.getTravelTime()).plus(o.getDelayTime());
+					});
+					c.setWorkingHours(wh);
 					return;
 				} else {
 					orders.forEach(o -> {
 						System.out.println("Order " + o.getId() + "\nAssign this order? Y (for yes)/ANY KEY\n");
 						if (takeAnswer()) {
 							newOne.add(o);
+							wh = wh.plus(o.getLoadingTime()).plus(o.getTravelTime()).plus(o.getDelayTime());
 						} else {
 							o.setStatusAccepted(false);
 						}
 					});
+					c.setWorkingHours(wh);
 					c.setListOrders(newOne);
 				}
 			}
