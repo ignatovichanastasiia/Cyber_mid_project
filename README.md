@@ -203,7 +203,7 @@ Deserializes the reports list from a file.
 #### First Stage:
 The user enters data for orders (transportation category, loading time, mileage) and couriers (vehicle category, working hours). This data is saved using serialization.
 Orders and couriers are added to the corresponding lists (OrderManager and CourierManager).
-The system verifies if the courier’s working hours meet the set limits (8, 10, and 11 hours) and applies penalties or blockages accordingly.
+The system verifies if the courier’s working hours meet the set limits and applies penalties or blockages accordingly.
 #### Second Stage:
 Orders are distributed among couriers, who confirm or decline the orders.
 In case of a large number of orders, the system automatically balances the distribution to ensure no courier exceeds 9 working hours.
